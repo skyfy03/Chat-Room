@@ -33,7 +33,7 @@ io.on('connection', function (socket) {
     }
 
     socket.on('dealDeck', function (socketId) {
-        players[socketId].inDeck = shuffle(["boolean", "ping"]);
+        players[socketId].inDeck = shuffle(["attackActionCard", "earthElement", "fireElement", "waterElement", "windElement"]);
         console.log(players);
         if (Object.keys(players).length < 2) return;
         io.emit('changeGameState', "Initializing");
@@ -42,7 +42,7 @@ io.on('connection', function (socket) {
     socket.on('dealCards', function (socketId) {
         for (let i = 0; i < 5; i++) {
             if (players[socketId].inDeck.length === 0) {
-                players[socketId].inDeck = shuffle(["boolean", "ping"]);
+                players[socketId].inDeck = shuffle(["attackActionCard", "earthElement", "fireElement", "waterElement", "windElement"]);
             }
             players[socketId].inHand.push(players[socketId].inDeck.shift());
         }

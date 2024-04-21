@@ -1,3 +1,4 @@
+//I dont think this is being used anywhere
 export default class CardHandler {
     constructor() {
         this.flipCard = (card) => {

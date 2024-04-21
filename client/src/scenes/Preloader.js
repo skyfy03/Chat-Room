@@ -34,12 +34,18 @@ export class Preloader extends Scene
 
         this.load.image('logo', 'logo.png');
 
-        this.load.image('cyanCardBack', 'CyanCardBack.png');
-        this.load.image('magentaCardBack', 'MagentaCardBack.png');
-        this.load.image('cyanBoolean', 'Cyan_Boolean3x.png');
-        this.load.image('magentaBoolean', 'Magenta_Boolean3x.png');
-        this.load.image('cyanPing', 'Cyan_Ping3x.png');
-        this.load.image('magentaPing', 'Magenta_Ping3x.png');
+        //CardBack
+        this.load.image('cardBack', 'cardBack.png');
+
+        //Action Cards
+        this.load.image('attackActionCard', 'attackActionCard.png');
+
+        //First 4 Elements
+        this.load.image('earthElement', 'earthCard.png');
+        this.load.image('fireElement', 'fireCard.png');
+        this.load.image('waterElement', 'waterCard.png');
+        this.load.image('windElement', 'windCard.png');
+
     }
 
     create ()
