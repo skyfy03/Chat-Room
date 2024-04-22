@@ -50,11 +50,21 @@ export default class InteractiveHandler {
 
         scene.input.on('drop', (pointer, gameObject, dropZone) => {
             if (scene.GameHandler.isMyTurn && scene.GameHandler.gameState === "Ready") {
-                gameObject.x = (dropZone.x - 350) + (dropZone.data.values.cards * 50);
-                gameObject.y = dropZone.y;
-                scene.dropZone.data.values.cards++;
-                scene.input.setDraggable(gameObject, false);
-                scene.socket.emit('cardPlayed', gameObject.data.values.name, scene.socket.id);
+
+                for (let i = 0; i < scene.dropZones.length; i++) {
+                    let tempDropZone = scene.dropZones[i];
+                    if (tempDropZone === dropZone) {
+
+                        gameObject.x = (tempDropZone.x - 350) + (tempDropZone.data.values.cards * 50);
+                        gameObject.y = tempDropZone.y;
+
+                        tempDropZone.data.values.cards++;
+                        //Set card undraggable
+                        scene.input.setDraggable(gameObject, false);
+                        scene.socket.emit('cardPlayed', gameObject.data.values.name, scene.socket.id, dropZone);
+
+                    }
+                }
             }
             else {
                 gameObject.x = gameObject.input.dragStartX;

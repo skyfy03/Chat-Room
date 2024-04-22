@@ -1,5 +1,8 @@
 export default class ZoneHandler {
     constructor(scene) {
+
+        this.name;
+
         this.renderZone = (x, y) => {
             let width = 850;
             let height = 125;

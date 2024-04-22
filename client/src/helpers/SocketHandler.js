@@ -54,11 +54,26 @@ export default class SocketHandler {
             }
         })
 
-        scene.socket.on('cardPlayed', (cardName, socketId) => {
+        scene.socket.on('cardPlayed', (cardName, socketId, dropZone) => {
+            console.log(dropZone);
+            //Show the opponent a card was played
             if (socketId !== scene.socket.id) {
                 scene.GameHandler.opponentHand.shift().destroy();
-                scene.DeckHandler.dealCard((scene.dropZone.x - 350) + (scene.dropZone.data.values.cards * 50), scene.dropZone.y, cardName, "opponentCard");
-                scene.dropZone.data.values.cards++;
+                
+                for (let i = 0; i < scene.dropZones.length; i++) {
+
+                    let tempDropZone = scene.dropZones[i];
+
+                    // tempDropZone === dropZone does not work
+                    // Whats the Chances two Drop Zones will be on top of eachother
+                    if (tempDropZone.name == "opponentCraftZone") {
+
+                        scene.DeckHandler.dealCard((tempDropZone.x - 350) + (tempDropZone.data.values.cards * 50), tempDropZone.y, cardName, "opponentCard");
+                        tempDropZone.data.values.cards++;
+
+                    }
+                }
+
             }
         })
 

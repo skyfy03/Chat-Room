@@ -5,13 +5,23 @@ export default class UIHandler {
 
         this.zoneHandler = new ZoneHandler(scene);
 
+        this.playerCraftZoneHandler = new ZoneHandler(scene);
+        this.opponentCraftZoneHandler = new ZoneHandler(scene);
+
         this.buildZones = () => {
+            scene.dropZones = [];
 
-            scene.dropZone = this.zoneHandler.renderZone(470, 375);
-            this.zoneHandler.renderOutline(scene.dropZone);
+            scene.playerCraftZone = this.playerCraftZoneHandler.renderZone(470, 700);
+            scene.playerCraftZone.name = "playerCraftZone";
+            this.playerCraftZoneHandler.renderOutline(scene.playerCraftZone);
 
-            //Temporary
-            let temp = scene.add.rectangle(470, 700, 850, 125).setStrokeStyle(4, 0x000000);
+            scene.opponentCraftZone = this.opponentCraftZoneHandler.renderZone(470, 375);
+            scene.opponentCraftZone.name = "opponentCraftZone";
+            this.opponentCraftZoneHandler.renderOutline(scene.opponentCraftZone);
+
+            scene.dropZones.push(scene.playerCraftZone);
+            scene.dropZones.push(scene.opponentCraftZone);
+
         }
 
         this.buildPlayerAreas = () => {

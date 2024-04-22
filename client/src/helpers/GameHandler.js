@@ -20,7 +20,6 @@ export default class GameHandler {
         this.playerTextHP;
         this.opponentTextHP;
 
-
         this.changeTurn = () => {
             this.isMyTurn = !this.isMyTurn;
             console.log("isMyTurn: " + this.isMyTurn);
