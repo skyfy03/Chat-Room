@@ -65,7 +65,7 @@ export default class SocketHandler {
         scene.socket.on('setPlayersHP', (socketId, playerHP, opponentHP) => {
             if (socketId === scene.socket.id) {
                 scene.GameHandler.changeHP(playerHP, opponentHP);
-            }//I think I need an else here. If the player lose hp the enemy will have to see their enemy hp go down.
+            }
         })
 
     }
