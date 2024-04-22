@@ -28,7 +28,6 @@ export default class SocketHandler {
             scene.GameHandler.changeTurn();
         })
 
-
         scene.socket.on('dealCards', (socketId, cards) => {
             if (socketId === scene.socket.id) {
                 for (let i in cards) {
@@ -47,6 +46,14 @@ export default class SocketHandler {
                 scene.DeckHandler.dealCard((scene.dropZone.x - 350) + (scene.dropZone.data.values.cards * 50), scene.dropZone.y, cardName, "opponentCard");
                 scene.dropZone.data.values.cards++;
             }
+        })
+
+        scene.socket.on('setPlayersHP', (socketId, playerHP, opponentHP) => {
+            if (socketId === scene.socket.id) {
+                console.log("Hello ");
+
+                scene.GameHandler.changeHP(playerHP, opponentHP);
+            }//I think I need an else here. If the player lose hp the enemy will have to see their enemy hp go down.
         })
 
     }

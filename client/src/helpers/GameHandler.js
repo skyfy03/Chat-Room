@@ -12,7 +12,13 @@ export default class GameHandler {
         this.opponentHand = [];
 
         this.playerSpellCombinationArea = [];
-        this.enemySpellCombinationArea = [];
+        this.opponentSpellCombinationArea = [];
+
+        this.playerHP = 0;
+        this.opponentHP = 0;
+
+        this.playerTextHP;
+        this.opponentTextHP;
 
 
         this.changeTurn = () => {
@@ -25,6 +31,14 @@ export default class GameHandler {
             this.gameState = gameState;
             console.log("GameState: " + this.gameState);
         }
+
+        this.changeHP = (playerHP, opponentHP) => {
+            this.playerHP += playerHP;
+            this.opponentHP += opponentHP;
+            scene.UIHandler.BuildHPText();
+            //this.displayStats();
+        };
+
     }
 
 }

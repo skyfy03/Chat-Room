@@ -23,6 +23,5 @@ export class Game extends Scene
         this.UIHandler = new UIHandler(this);
         this.UIHandler.buildUI();
         this.InteractiveHandler = new InteractiveHandler(this);
-
     }
 }

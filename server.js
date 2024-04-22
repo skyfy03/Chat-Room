@@ -24,12 +24,15 @@ io.on('connection', function (socket) {
     players[socket.id] = {
         inDeck: [],
         inHand: [],
+        playerHP: 50,
+        opponentHP: 50,
         isPlayerA: false
     };
 
     if (Object.keys(players).length < 2) {
         players[socket.id].isPlayerA = true;
         io.emit('firstTurn');
+        io.emit('setPlayersHP', socket.id, players[socket.id].playerHP, players[socket.id].opponentHP);
     }
 
     socket.on('dealDeck', function (socketId) {

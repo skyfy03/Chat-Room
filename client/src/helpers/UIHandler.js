@@ -60,11 +60,29 @@ export default class UIHandler {
             scene.dealCards = scene.add.text(960, 445, "Deal Cards").setFontSize(14).setFontFamily('Trebuchet MS');
         }
 
+        this.BuildHPText = () => {
+
+            if (scene.opponentTextHP != null) {
+                scene.opponentTextHP.destroy();
+            }
+            if (scene.playerTextHP != null) {
+                scene.playerTextHP.destroy();
+            }
+
+            scene.opponentTextHP = scene.add.text(1275, 480, scene.GameHandler.opponentHP).setFontSize(28).setFontFamily('Trebuchet MS');
+            scene.add.text(1250, 500, "Enemy HP").setFontSize(28).setFontFamily('Trebuchet MS');
+
+
+            scene.playerTextHP = scene.add.text(1275, 560, scene.GameHandler.playerHP).setFontSize(28).setFontFamily('Trebuchet MS');
+            scene.add.text(1250, 580, "Player HP").setFontSize(28).setFontFamily('Trebuchet MS');
+        }
+
         this.buildUI = () => {
             this.buildZones();
             this.buildPlayerAreas();
             this.buildSpellCombinationAreas();
             this.buildGameText();
+            this.BuildHPText();
         }
 
     }
