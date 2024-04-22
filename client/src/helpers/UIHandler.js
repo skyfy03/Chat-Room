@@ -48,8 +48,8 @@ export default class UIHandler {
             //scene.playerDeckArea = scene.add.rectangle(1000, 950, deckAreaWidth, deckAreaHeight);
             //scene.playerDeckArea.setStrokeStyle(3, 0x00ffff);
 
-            scene.playerSpellCombinationArea = scene.add.rectangle(470, 225, spellAreaWidth, spellAreaHeight);
-            scene.playerSpellCombinationArea.setStrokeStyle(4, 0xea4444);
+            scene.opponentSpellCombinationArea = scene.add.rectangle(470, 225, spellAreaWidth, spellAreaHeight);
+            scene.opponentSpellCombinationArea.setStrokeStyle(4, 0xea4444);
 
             //scene.opponentDeckArea = scene.add.rectangle(1000, 110, deckAreaWidth, deckAreaHeight);
             //scene.opponentDeckArea.setStrokeStyle(3, 0x00ffff);
@@ -60,7 +60,7 @@ export default class UIHandler {
             scene.dealCards = scene.add.text(960, 445, "Deal Cards").setFontSize(14).setFontFamily('Trebuchet MS');
         }
 
-        this.BuildHPText = () => {
+        this.buildHPText = () => {
 
             if (scene.opponentTextHP != null) {
                 scene.opponentTextHP.destroy();
@@ -77,12 +77,18 @@ export default class UIHandler {
             scene.add.text(1250, 580, "Player HP").setFontSize(28).setFontFamily('Trebuchet MS');
         }
 
+        this.buildEndTurnText = () => {
+            scene.endTurnButton = scene.add.text(1800, 1000, "End Turn").setFontSize(18).setFontFamily('Trebuchet MS');
+            scene.endTurnButton.setColor('#d70808');
+        }
+
         this.buildUI = () => {
             this.buildZones();
             this.buildPlayerAreas();
             this.buildSpellCombinationAreas();
             this.buildGameText();
-            this.BuildHPText();
+            this.buildHPText();
+            this.buildEndTurnText();
         }
 
     }

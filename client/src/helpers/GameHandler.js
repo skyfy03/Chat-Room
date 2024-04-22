@@ -35,8 +35,7 @@ export default class GameHandler {
         this.changeHP = (playerHP, opponentHP) => {
             this.playerHP += playerHP;
             this.opponentHP += opponentHP;
-            scene.UIHandler.BuildHPText();
-            //this.displayStats();
+            scene.UIHandler.buildHPText();
         };
 
     }

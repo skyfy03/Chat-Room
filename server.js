@@ -60,6 +60,9 @@ io.on('connection', function (socket) {
 
     socket.on('cardPlayed', function (cardName, socketId) {
         io.emit('cardPlayed', cardName, socketId);
+    });
+
+    socket.on('changeTurn', function (socketId) {
         io.emit('changeTurn');
     });
 
