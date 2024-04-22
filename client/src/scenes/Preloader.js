@@ -46,6 +46,12 @@ export class Preloader extends Scene
         this.load.image('waterElement', 'waterCard.png');
         this.load.image('windElement', 'windCard.png');
 
+        //First 4 Attack Spell
+        this.load.image('fireBlast', 'fireBlastSpell.png');
+        this.load.image('fireElement', 'powerfulGustSpell.png');
+        this.load.image('powerfulGust', 'throwRockSpell.png');
+        this.load.image('violentWave', 'violentWaveSpell.png');
+
     }
 
     create ()
