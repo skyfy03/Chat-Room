@@ -17,6 +17,7 @@ export default class UIHandler {
 
             scene.opponentCraftZone = this.opponentCraftZoneHandler.renderZone(470, 375);
             scene.opponentCraftZone.name = "opponentCraftZone";
+            scene.opponentCraftZone.disableInteractive();
             this.opponentCraftZoneHandler.renderOutline(scene.opponentCraftZone);
 
             scene.dropZones.push(scene.playerCraftZone);

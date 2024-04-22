@@ -26,7 +26,8 @@ io.on('connection', function (socket) {
         inHand: [],
         playerHP: 50,
         opponentHP: 50,
-        isPlayerA: false
+        isPlayerA: false,
+        playerNumber: -1
     };
 
     if (Object.keys(players).length < 2) {
@@ -40,6 +41,7 @@ io.on('connection', function (socket) {
         players[socketId].inDeck = shuffle(["attackActionCard", "earthElement", "fireElement", "waterElement", "windElement"]);
         console.log(players);
         if (Object.keys(players).length < 2) return;
+
         io.emit('changeGameState', "Initializing");
     })
 
@@ -59,12 +61,26 @@ io.on('connection', function (socket) {
         }
     });
 
-    socket.on('cardPlayed', function (cardName, socketId, dropZone) {
-        io.emit('cardPlayed', cardName, socketId, dropZone);
+    socket.on('cardPlayed', function (cardName, socketId) {
+        io.emit('cardPlayed', cardName, socketId);
     });
 
     socket.on('changeTurn', function (socketId) {
         io.emit('changeTurn');
+    });
+    
+    socket.on('setUpPlayerAreas', function (socketId) {
+
+        let opponentSocketId;
+        for (let i = 0; i < Object.keys(players).length; i++) {
+            let tempPlayer = Object.keys(players)[i];
+            if (socketId !== tempPlayer) {
+                opponentSocketId = tempPlayer;
+                break;
+            }
+        }
+
+        io.emit('setPlayerAreas', socket.id, opponentSocketId);
     });
 
     socket.on('disconnect', function () {

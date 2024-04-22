@@ -26,7 +26,8 @@ export default class SocketHandler {
                 scene.DeckHandler.dealCard(1000, 80, "cardBack", "opponentCard");
                 scene.dealCards.setInteractive();
                 scene.dealCards.setColor('#00ffff');
-
+            } else if (gameState === "Ready") {
+                scene.socket.emit('setUpPlayerAreas', scene.socket.id);
             }
         });
 
@@ -54,19 +55,19 @@ export default class SocketHandler {
             }
         })
 
-        scene.socket.on('cardPlayed', (cardName, socketId, dropZone) => {
-            console.log(dropZone);
+        scene.socket.on('cardPlayed', (cardName, socketId) => {
+
             //Show the opponent a card was played
             if (socketId !== scene.socket.id) {
                 scene.GameHandler.opponentHand.shift().destroy();
-                
+
                 for (let i = 0; i < scene.dropZones.length; i++) {
 
                     let tempDropZone = scene.dropZones[i];
 
                     // tempDropZone === dropZone does not work
                     // Whats the Chances two Drop Zones will be on top of eachother
-                    if (tempDropZone.name == "opponentCraftZone") {
+                    if (tempDropZone.name == socketId) {
 
                         scene.DeckHandler.dealCard((tempDropZone.x - 350) + (tempDropZone.data.values.cards * 50), tempDropZone.y, cardName, "opponentCard");
                         tempDropZone.data.values.cards++;
@@ -80,6 +81,16 @@ export default class SocketHandler {
         scene.socket.on('setPlayersHP', (socketId, playerHP, opponentHP) => {
             if (socketId === scene.socket.id) {
                 scene.GameHandler.changeHP(playerHP, opponentHP);
+            }
+        })
+
+        scene.socket.on('setPlayerAreas', (socketId, opponentSocketId) => {
+            if (socketId === scene.socket.id) {
+                //console.log("Players Socket ID: " + socketId);
+                //console.log("Opponent Socket ID: " + opponentSocketId);
+
+                scene.playerCraftZone.name = socketId;
+                scene.opponentCraftZone.name = opponentSocketId;
             }
         })
 

@@ -53,7 +53,7 @@ export default class InteractiveHandler {
 
                 for (let i = 0; i < scene.dropZones.length; i++) {
                     let tempDropZone = scene.dropZones[i];
-                    if (tempDropZone === dropZone) {
+                    if (tempDropZone.name === dropZone.name) {
 
                         gameObject.x = (tempDropZone.x - 350) + (tempDropZone.data.values.cards * 50);
                         gameObject.y = tempDropZone.y;
@@ -61,7 +61,7 @@ export default class InteractiveHandler {
                         tempDropZone.data.values.cards++;
                         //Set card undraggable
                         scene.input.setDraggable(gameObject, false);
-                        scene.socket.emit('cardPlayed', gameObject.data.values.name, scene.socket.id, dropZone);
+                        scene.socket.emit('cardPlayed', gameObject.data.values.name, tempDropZone.name);
 
                     }
                 }

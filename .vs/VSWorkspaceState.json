@@ -3,8 +3,10 @@
     "",
     "\\client",
     "\\client\\public\\assets",
+    "\\client\\src",
+    "\\client\\src\\helpers",
     "\\client\\src\\scenes"
   ],
-  "SelectedNode": "\\client\\public",
+  "SelectedNode": "\\client\\src\\helpers\\DeckHandler.js",
   "PreviewInSolutionExplorer": false
 }
