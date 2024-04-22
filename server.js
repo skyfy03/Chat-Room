@@ -24,6 +24,8 @@ io.on('connection', function (socket) {
     players[socket.id] = {
         inDeck: [],
         inHand: [],
+        playerHP: 50,
+        opponentHP: 50,
         isPlayerA: false
     };
 
@@ -32,8 +34,10 @@ io.on('connection', function (socket) {
         io.emit('firstTurn');
     }
 
+    io.emit('setPlayersHP', socket.id, players[socket.id].playerHP, players[socket.id].opponentHP);
+
     socket.on('dealDeck', function (socketId) {
-        players[socketId].inDeck = shuffle(["boolean", "ping"]);
+        players[socketId].inDeck = shuffle(["attackActionCard", "earthElement", "fireElement", "waterElement", "windElement"]);
         console.log(players);
         if (Object.keys(players).length < 2) return;
         io.emit('changeGameState', "Initializing");
@@ -42,7 +46,7 @@ io.on('connection', function (socket) {
     socket.on('dealCards', function (socketId) {
         for (let i = 0; i < 5; i++) {
             if (players[socketId].inDeck.length === 0) {
-                players[socketId].inDeck = shuffle(["boolean", "ping"]);
+                players[socketId].inDeck = shuffle(["attackActionCard", "earthElement", "fireElement", "waterElement", "windElement"]);
             }
             players[socketId].inHand.push(players[socketId].inDeck.shift());
         }
@@ -55,8 +59,11 @@ io.on('connection', function (socket) {
         }
     });
 
-    socket.on('cardPlayed', function (cardName, socketId) {
-        io.emit('cardPlayed', cardName, socketId);
+    socket.on('cardPlayed', function (cardName, socketId, dropZone) {
+        io.emit('cardPlayed', cardName, socketId, dropZone);
+    });
+
+    socket.on('changeTurn', function (socketId) {
         io.emit('changeTurn');
     });
 

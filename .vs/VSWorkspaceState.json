@@ -2,10 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\client",
-    "\\client\\src",
-    "\\client\\src\\helpers",
+    "\\client\\public\\assets",
     "\\client\\src\\scenes"
   ],
-  "SelectedNode": "\\package.json",
+  "SelectedNode": "\\client\\public",
   "PreviewInSolutionExplorer": false
 }

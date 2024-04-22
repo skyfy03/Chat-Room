@@ -16,7 +16,6 @@ export default class InteractiveHandler {
             scene.dealCards.setColor('#00ffff')
         })
 
-
         scene.input.on('pointerover', (event, gameObjects) => {
             let pointer = scene.input.activePointer;
             if (gameObjects[0].type === "Image" && gameObjects[0].data.list.name !== "cardBack") {
@@ -51,16 +50,39 @@ export default class InteractiveHandler {
 
         scene.input.on('drop', (pointer, gameObject, dropZone) => {
             if (scene.GameHandler.isMyTurn && scene.GameHandler.gameState === "Ready") {
-                gameObject.x = (dropZone.x - 350) + (dropZone.data.values.cards * 50);
-                gameObject.y = dropZone.y;
-                scene.dropZone.data.values.cards++;
-                scene.input.setDraggable(gameObject, false);
-                scene.socket.emit('cardPlayed', gameObject.data.values.name, scene.socket.id);
+
+                for (let i = 0; i < scene.dropZones.length; i++) {
+                    let tempDropZone = scene.dropZones[i];
+                    if (tempDropZone === dropZone) {
+
+                        gameObject.x = (tempDropZone.x - 350) + (tempDropZone.data.values.cards * 50);
+                        gameObject.y = tempDropZone.y;
+
+                        tempDropZone.data.values.cards++;
+                        //Set card undraggable
+                        scene.input.setDraggable(gameObject, false);
+                        scene.socket.emit('cardPlayed', gameObject.data.values.name, scene.socket.id, dropZone);
+
+                    }
+                }
             }
             else {
                 gameObject.x = gameObject.input.dragStartX;
                 gameObject.y = gameObject.input.dragStartY;
             }
+        })
+
+        scene.endTurnButton.on('pointerdown', () => {
+            scene.socket.emit("changeTurn", scene.socket.id);
+            scene.endTurnButton.disableInteractive();
+        })
+
+        scene.endTurnButton.on('pointerover', () => {
+            scene.endTurnButton.setColor('#87f802');
+        })
+
+        scene.endTurnButton.on('pointerout', () => {
+            scene.endTurnButton.setColor('#36f802')
         })
 
     }

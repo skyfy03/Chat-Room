@@ -7,7 +7,7 @@ export default class Card {
             } else {
                 sprite = this.opponentCardSprite;
             }
-            let card = scene.add.image(x, y, sprite).setScale(0.25, 0.25).setInteractive().setData({
+            let card = scene.add.image(x, y, sprite).setInteractive().setData({
                 "name": this.name,
                 "type": type,
                 "sprite": sprite
