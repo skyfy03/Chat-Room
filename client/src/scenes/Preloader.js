@@ -48,8 +48,8 @@ export class Preloader extends Scene
 
         //First 4 Attack Spell
         this.load.image('fireBlast', 'fireBlastSpell.png');
-        this.load.image('fireElement', 'powerfulGustSpell.png');
-        this.load.image('powerfulGust', 'throwRockSpell.png');
+        this.load.image('powerfulGust', 'powerfulGustSpell.png');
+        this.load.image('throwRock', 'throwRockSpell.png');
         this.load.image('violentWave', 'violentWaveSpell.png');
 
     }

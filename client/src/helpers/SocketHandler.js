@@ -71,11 +71,14 @@ export default class SocketHandler {
 
                         scene.DeckHandler.dealCard((tempDropZone.x - 350) + (tempDropZone.data.values.cards * 50), tempDropZone.y, cardName, "opponentCard");
                         tempDropZone.data.values.cards++;
+                        scene.GameHandler.opponentCraftSpellZone.push(cardName);
 
                     }
                 }
 
             }
+
+
         })
 
         scene.socket.on('setPlayersHP', (socketId, playerHP, opponentHP) => {
@@ -86,11 +89,27 @@ export default class SocketHandler {
 
         scene.socket.on('setPlayerAreas', (socketId, opponentSocketId) => {
             if (socketId === scene.socket.id) {
-                //console.log("Players Socket ID: " + socketId);
-                //console.log("Opponent Socket ID: " + opponentSocketId);
-
                 scene.playerCraftZone.name = socketId;
                 scene.opponentCraftZone.name = opponentSocketId;
+            }
+        })
+
+        scene.socket.on('craftTextValidator', (socketId, isCraftText, craftSpellName) => {
+            if (socketId === scene.socket.id) {
+
+                if (isCraftText) {
+                    scene.craftText.setInteractive();
+                    scene.craftText.setColor('#36f802');
+
+                    scene.craftSpellCardPreview = scene.add.image(1100, 825, scene.GameHandler.craftSpellName);
+                    
+
+                } else {
+
+                }
+
+                //console.log("Hello!");
+
             }
         })
 

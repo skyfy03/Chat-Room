@@ -26,8 +26,7 @@ io.on('connection', function (socket) {
         inHand: [],
         playerHP: 50,
         opponentHP: 50,
-        isPlayerA: false,
-        playerNumber: -1
+        isPlayerA: false
     };
 
     if (Object.keys(players).length < 2) {
@@ -81,6 +80,10 @@ io.on('connection', function (socket) {
         }
 
         io.emit('setPlayerAreas', socket.id, opponentSocketId);
+    });
+
+    socket.on('craftTextValidator', function (socketId, isCraftText, craftSpellName) {
+        io.emit('craftTextValidator', socketId, isCraftText, craftSpellName);
     });
 
     socket.on('disconnect', function () {

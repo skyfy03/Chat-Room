@@ -2,6 +2,7 @@ export default class InteractiveHandler {
     constructor(scene) {
 
         scene.cardPreview = null;
+        scene.craftSpellCardPreview = null;
 
         scene.dealCards.on('pointerdown', () => {
             scene.socket.emit("dealCards", scene.socket.id);
@@ -51,6 +52,8 @@ export default class InteractiveHandler {
         scene.input.on('drop', (pointer, gameObject, dropZone) => {
             if (scene.GameHandler.isMyTurn && scene.GameHandler.gameState === "Ready") {
 
+                let craftTextBeforeDrop = scene.GameHandler.isCraftText;
+
                 for (let i = 0; i < scene.dropZones.length; i++) {
                     let tempDropZone = scene.dropZones[i];
                     if (tempDropZone.name === dropZone.name) {
@@ -58,10 +61,17 @@ export default class InteractiveHandler {
                         gameObject.x = (tempDropZone.x - 350) + (tempDropZone.data.values.cards * 50);
                         gameObject.y = tempDropZone.y;
 
+                        scene.GameHandler.playerCraftSpellZone.push(gameObject.data.values.name);
                         tempDropZone.data.values.cards++;
+
                         //Set card undraggable
                         scene.input.setDraggable(gameObject, false);
                         scene.socket.emit('cardPlayed', gameObject.data.values.name, tempDropZone.name);
+
+                        scene.GameHandler.changePlayerCraftSpellZone();
+                        if (craftTextBeforeDrop != scene.GameHandler.isCraftText) {
+                            scene.socket.emit('craftTextValidator', scene.socket.id, scene.GameHandler.isCraftText, scene.GameHandler.craftSpellName);
+                        }
 
                     }
                 }
@@ -82,6 +92,19 @@ export default class InteractiveHandler {
         })
 
         scene.endTurnButton.on('pointerout', () => {
+            scene.endTurnButton.setColor('#36f802')
+        })
+
+        scene.craftText.on('pointerdown', () => {
+            //scene.socket.emit("changeTurn", scene.socket.id);
+            scene.endTurnButton.disableInteractive();
+        })
+
+        scene.craftText.on('pointerover', () => {
+            scene.endTurnButton.setColor('#87f802');
+        })
+
+        scene.craftText.on('pointerout', () => {
             scene.endTurnButton.setColor('#36f802')
         })
 
