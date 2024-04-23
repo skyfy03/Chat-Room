@@ -1,22 +1,37 @@
+import CraftSpellZoneHandler from './CraftSpellZoneHandler';
 import ZoneHandler from './ZoneHandler';
 
 export default class UIHandler {
     constructor(scene) {
 
-        this.playerCraftZoneHandler = new ZoneHandler(scene);
-        this.opponentCraftZoneHandler = new ZoneHandler(scene);
+        this.playerCraftZoneHandler = new CraftSpellZoneHandler(scene);
+        this.playerPlayZoneHandler = new ZoneHandler(scene);
+
+        this.opponentCraftZoneHandler = new CraftSpellZoneHandler(scene);
+        this.opponentPlayZoneHandler = new ZoneHandler(scene);
 
         this.buildZones = () => {
             scene.dropZones = [];
 
             scene.playerCraftZone = this.playerCraftZoneHandler.renderZone(470, 825);
             scene.playerCraftZone.name = "playerCraftZone";
-            this.playerCraftZoneHandler.renderOutline(scene.playerCraftZone);
+            this.playerCraftZoneHandler.renderOutline(scene.playerCraftZone, "c5a5f3");
+
+            scene.playerPlayZoneHandler = this.playerPlayZoneHandler.renderZone(470, 625);
+            scene.playerPlayZoneHandler.name = "playerPlayZone";
+            this.playerPlayZoneHandler.renderOutline(scene.playerPlayZoneHandler, "000000");
+
 
             scene.opponentCraftZone = this.opponentCraftZoneHandler.renderZone(470, 255);
             scene.opponentCraftZone.name = "opponentCraftZone";
             scene.opponentCraftZone.disableInteractive();
-            this.opponentCraftZoneHandler.renderOutline(scene.opponentCraftZone);
+            this.opponentCraftZoneHandler.renderOutline(scene.opponentCraftZone, "c5a5f3");
+
+            scene.opponentPlayZoneHandler = this.opponentPlayZoneHandler.renderZone(470, 455);
+            scene.opponentPlayZoneHandler.name = "opponentPlayZone";
+            scene.opponentPlayZoneHandler.disableInteractive();
+            this.opponentCraftZoneHandler.renderOutline(scene.opponentPlayZoneHandler, "000000");
+
 
             scene.dropZones.push(scene.playerCraftZone);
             scene.dropZones.push(scene.opponentCraftZone);

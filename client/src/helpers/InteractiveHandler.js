@@ -52,7 +52,53 @@ export default class InteractiveHandler {
         scene.input.on('drop', (pointer, gameObject, dropZone) => {
             if (scene.GameHandler.isMyTurn && scene.GameHandler.gameState === "Ready") {
 
+                //console.log(gameObject.data.values.currentDropZone);
+
                 let craftTextBeforeDrop = scene.GameHandler.isCraftText;
+
+                //Remove card from previous dropZone.data.values.cards - 1;
+                //Remove card from playerCraftSpellZone if previous DropZone was playerCraftSpellZone
+                //Update opponent client game
+                if (gameObject.data.values.currentDropZone != null) {
+                    for (let i = 0; i < scene.dropZones.length; i++) {
+
+                        let tempDropZone = scene.dropZones[i];
+
+                        if (gameObject.data.values.currentDropZone === "playerPlayZone") {
+
+                            
+
+                            console.log("Found");
+                        } else if (gameObject.data.values.currentDropZone === tempDropZone.name) {
+
+                            let indexOfCardName = scene.GameHandler.playerCraftSpellZone.indexOf(gameObject.data.values.name);
+                            scene.GameHandler.playerCraftSpellZone.splice(indexOfCardName, 1);
+                            //Assuming CardName and cardGameObject are in the same index.
+                            tempDropZone.data.values.cardGameObjects.splice(indexOfCardName, 1);
+
+
+                            tempDropZone.data.values.cards--;
+                            gameObject.data.values.currentDropZone = null;
+
+                            if (tempDropZone.data.values.cards > 0) {
+                                //Update client cards
+
+                                for (let x = 0; x < tempDropZone.data.values.cardGameObjects.length; x++) {
+                                    let tempGameObj = tempDropZone.data.values.cardGameObjects[x];
+
+                                    tempGameObj.x = (tempDropZone.x - 350) + (x * 50);
+                                    tempGameObj.y = tempDropZone.y;
+                                    
+                                }
+
+                            }
+
+                            console.log("Found");
+                        }
+                    }
+                }
+
+
 
                 for (let i = 0; i < scene.dropZones.length; i++) {
                     let tempDropZone = scene.dropZones[i];
@@ -63,16 +109,18 @@ export default class InteractiveHandler {
 
                         scene.GameHandler.playerCraftSpellZone.push(gameObject.data.values.name);
                         tempDropZone.data.values.cards++;
+                        tempDropZone.data.values.cardGameObjects.push(gameObject);
+
+                        gameObject.data.values.currentDropZone = tempDropZone.name;
 
                         //Set card undraggable
-                        scene.input.setDraggable(gameObject, false);
+                        //scene.input.setDraggable(gameObject, false);
                         scene.socket.emit('cardPlayed', gameObject.data.values.name, tempDropZone.name);
 
                         scene.GameHandler.changePlayerCraftSpellZone();
                         if (craftTextBeforeDrop != scene.GameHandler.isCraftText) {
                             scene.socket.emit('craftTextValidator', scene.socket.id, scene.GameHandler.isCraftText, scene.GameHandler.craftSpellName);
                         }
-
                     }
                 }
             }
