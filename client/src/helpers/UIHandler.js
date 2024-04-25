@@ -11,30 +11,24 @@ export default class UIHandler {
         this.opponentPlayZoneHandler = new ZoneHandler(scene);
 
         this.buildZones = () => {
-            scene.dropZones = [];
 
             scene.playerCraftZone = this.playerCraftZoneHandler.renderZone(470, 825);
             scene.playerCraftZone.name = "playerCraftZone";
             this.playerCraftZoneHandler.renderOutline(scene.playerCraftZone, "c5a5f3");
 
-            scene.playerPlayZoneHandler = this.playerPlayZoneHandler.renderZone(470, 625);
-            scene.playerPlayZoneHandler.name = "playerPlayZone";
-            this.playerPlayZoneHandler.renderOutline(scene.playerPlayZoneHandler, "000000");
-
+            scene.playerPlayZone = this.playerPlayZoneHandler.renderZone(470, 625);
+            scene.playerPlayZone.name = "playerPlayZone";
+            this.playerPlayZoneHandler.renderOutline(scene.playerPlayZone, "000000");
 
             scene.opponentCraftZone = this.opponentCraftZoneHandler.renderZone(470, 255);
             scene.opponentCraftZone.name = "opponentCraftZone";
             scene.opponentCraftZone.disableInteractive();
             this.opponentCraftZoneHandler.renderOutline(scene.opponentCraftZone, "c5a5f3");
 
-            scene.opponentPlayZoneHandler = this.opponentPlayZoneHandler.renderZone(470, 455);
-            scene.opponentPlayZoneHandler.name = "opponentPlayZone";
-            scene.opponentPlayZoneHandler.disableInteractive();
-            this.opponentCraftZoneHandler.renderOutline(scene.opponentPlayZoneHandler, "000000");
-
-
-            scene.dropZones.push(scene.playerCraftZone);
-            scene.dropZones.push(scene.opponentCraftZone);
+            scene.opponentPlayZone = this.opponentPlayZoneHandler.renderZone(470, 455);
+            scene.opponentPlayZone.name = "opponentPlayZone";
+            scene.opponentPlayZone.disableInteractive();
+            this.opponentPlayZoneHandler.renderOutline(scene.opponentPlayZone, "000000");
 
         }
 

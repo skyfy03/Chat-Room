@@ -24,6 +24,8 @@ io.on('connection', function (socket) {
     players[socket.id] = {
         inDeck: [],
         inHand: [],
+        inCraftSpellZone: [],
+        inPlayZone: [],
         playerHP: 50,
         opponentHP: 50,
         isPlayerA: false
@@ -60,8 +62,55 @@ io.on('connection', function (socket) {
         }
     });
 
-    socket.on('cardPlayed', function (cardName, socketId) {
-        io.emit('cardPlayed', cardName, socketId);
+    socket.on('removeCardPlayedInHand', function (socketId, cardName) {
+
+        //Currently assumed to be in player hand. which is null on the card gameObject
+        //Remove Card from hand.
+        let indexOfCardName = players[socketId].inHand.indexOf(cardName);
+        players[socketId].inHand.splice(indexOfCardName, 1);
+
+        io.emit('removeCardPlayedInHand', socketId);
+
+    })
+
+    socket.on('removeCardPlayZone', function (socketId, cardName) {
+
+        //Currently assumed to be in player hand. which is null on the card gameObject
+        //Remove Card from hand.
+        let indexOfCardName = players[socketId].inPlayZone.indexOf(cardName);
+        players[socketId].inPlayZone.splice(indexOfCardName, 1);
+
+        io.emit('removeCardPlayedPlayZone', socketId, players[socketId].inPlayZone);
+
+    })
+
+    socket.on('removeCardCraftZone', function (socketId, cardName) {
+
+        //Currently assumed to be in player hand. which is null on the card gameObject
+        //Remove Card from hand.
+        let indexOfCardName = players[socketId].inCraftSpellZone.indexOf(cardName);
+        players[socketId].inCraftSpellZone.splice(indexOfCardName, 1);
+
+        io.emit('removeCardPlayedCraftZone', socketId, cardName, players[socketId].inCraftSpellZone);
+
+    })
+
+    socket.on('cardPlayedCraftZone', function (socketId, cardName) {
+
+        players[socketId].inCraftSpellZone.push(cardName);
+
+        console.log(players);
+
+        io.emit('cardPlayedCraftZone', socketId, players[socketId].inCraftSpellZone);
+    });
+
+    socket.on('cardPlayedPlayZone', function (socketId, cardName) {
+
+        players[socketId].inPlayZone.push(cardName);
+
+        console.log(players);
+
+        io.emit('cardPlayedPlayZone', socketId, players[socketId].inPlayZone);
     });
 
     socket.on('changeTurn', function (socketId) {

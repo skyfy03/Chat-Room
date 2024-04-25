@@ -11,6 +11,12 @@ export default class GameHandler {
         this.playerHand = [];
         this.opponentHand = [];
 
+        this.playerCraftSpellZone = [];
+        this.opponentCraftSpellZone = [];
+
+        this.playerPlayZone = [];
+        this.opponentPlayZone = [];
+
         this.playerHP = 0;
         this.opponentHP = 0;
 
@@ -20,8 +26,6 @@ export default class GameHandler {
         this.isCraftText = false;
         this.craftSpellName = "";
 
-        this.playerCraftSpellZone = [];
-        this.opponentCraftSpellZone = [];
 
         this.changeTurn = () => {
             this.isMyTurn = !this.isMyTurn;

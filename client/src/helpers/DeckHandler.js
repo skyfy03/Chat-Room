@@ -15,7 +15,7 @@ import ViolentWave from './cards/ViolentWave';
 
 export default class DeckHandler {
     constructor(scene) {
-        this.dealCard = (x, y, name, type) => {
+        this.dealCard = (x, y, name, type, dropZoneName) => {
             let cards = {
                 cardBack: new CardBack(scene),
                 
@@ -32,7 +32,7 @@ export default class DeckHandler {
                 violentWave: new ViolentWave(scene)
             }
             let newCard = cards[name];
-            return(newCard.render(x, y, type));
+            return(newCard.render(x, y, type, dropZoneName));
         }
     }
 }
