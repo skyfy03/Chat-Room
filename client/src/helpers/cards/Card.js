@@ -1,6 +1,6 @@
 export default class Card {
     constructor(scene) {
-        this.render = (x, y, type) => {
+        this.render = (x, y, type, dropZoneName) => {
             let sprite;
             if (type === 'playerCard') {
                 sprite = this.playerCardSprite;
@@ -10,7 +10,8 @@ export default class Card {
             let card = scene.add.image(x, y, sprite).setInteractive().setData({
                 "name": this.name,
                 "type": type,
-                "sprite": sprite
+                "sprite": sprite,
+                "dropZoneName": dropZoneName
             });
             if (type === 'playerCard') {
                 scene.input.setDraggable(card);

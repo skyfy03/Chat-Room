@@ -26,7 +26,8 @@ export default class SocketHandler {
                 scene.DeckHandler.dealCard(1000, 80, "cardBack", "opponentCard");
                 scene.dealCards.setInteractive();
                 scene.dealCards.setColor('#00ffff');
-
+            } else if (gameState === "Ready") {
+                scene.socket.emit('setUpPlayerAreas', scene.socket.id);
             }
         });
 
@@ -42,44 +43,157 @@ export default class SocketHandler {
 
         })
 
+        scene.socket.on('removeCardPlayedInHand', (socketId) => {
+
+            if (socketId !== scene.socket.id) {
+                scene.GameHandler.opponentHand.shift().destroy();
+            }
+
+        })
+
+        scene.socket.on('removeCardPlayedCraftZone', (socketId, cardName, cardsInCraftSpellZone) => {
+
+            if (socketId === scene.socket.id) {
+
+                scene.GameHandler.playerCraftSpellZone.forEach(d => d.destroy());
+                scene.GameHandler.playerCraftSpellZone = [];
+
+                for (let i in cardsInCraftSpellZone) {
+                    scene.GameHandler.playerCraftSpellZone.push(scene.DeckHandler.dealCard((scene.playerCraftZone.x - 350) + (i * 50), scene.playerCraftZone.y, cardsInCraftSpellZone[i], "playerCard", scene.playerCraftZone.name));
+                }
+
+            }
+            else if (socketId !== scene.socket.id) {
+
+                scene.GameHandler.opponentCraftSpellZone.forEach(d => d.destroy());
+                scene.GameHandler.opponentCraftSpellZone = [];
+
+                for (let i in cardsInCraftSpellZone) {
+                    scene.GameHandler.opponentCraftSpellZone.push(scene.DeckHandler.dealCard((scene.opponentCraftZone.x - 350) + (i * 50), scene.opponentCraftZone.y, cardsInCraftSpellZone[i], "opponentCard", scene.opponentCraftZone.name));
+                }
+
+            }
+
+        })
+
+        scene.socket.on('removeCardPlayedPlayZone', (socketId, cardsInPlayZone) => {
+
+            if (socketId === scene.socket.id) {
+
+                scene.GameHandler.playerPlayZone.forEach(d => d.destroy());
+                scene.GameHandler.playerPlayZone = [];
+
+                for (let i in cardsInPlayZone) {
+                    scene.GameHandler.playerPlayZone.push(scene.DeckHandler.dealCard((scene.playerPlayZone.x - 350) + (i * 50), scene.playerPlayZone.y, cardsInPlayZone[i], "playerCard", scene.playerPlayZone.name));
+                }
+
+            }
+            else if (socketId !== scene.socket.id) {
+
+                scene.GameHandler.opponentPlayZone.forEach(d => d.destroy());
+                scene.GameHandler.opponentPlayZone = [];
+
+                for (let i in cardsInPlayZone) {
+                    scene.GameHandler.opponentPlayZone.push(scene.DeckHandler.dealCard((scene.opponentPlayZone.x - 350) + (i * 50), scene.opponentPlayZone.y, cardsInPlayZone[i], "opponentCard", scene.opponentPlayZone.name));
+                }
+                
+            }
+
+        })
+
         scene.socket.on('dealCards', (socketId, cards) => {
             if (socketId === scene.socket.id) {
                 for (let i in cards) {
-                    let card = scene.GameHandler.playerHand.push(scene.DeckHandler.dealCard(155 + (i * 155), 1000, cards[i], "playerCard"));
+                    let card = scene.GameHandler.playerHand.push(scene.DeckHandler.dealCard(155 + (i * 155), 1000, cards[i], "playerCard", "playerHand"));
                 }
             } else {
                 for (let i in cards) {
-                    let card = scene.GameHandler.opponentHand.push(scene.DeckHandler.dealCard(155 + (i * 155), 80, "cardBack", "opponentCard"));
+                    let card = scene.GameHandler.opponentHand.push(scene.DeckHandler.dealCard(155 + (i * 155), 80, "cardBack", "opponentCard", "opponentHand"));
                 }
             }
         })
 
-        scene.socket.on('cardPlayed', (cardName, socketId, dropZone) => {
-            console.log(dropZone);
-            //Show the opponent a card was played
-            if (socketId !== scene.socket.id) {
-                scene.GameHandler.opponentHand.shift().destroy();
-                
-                for (let i = 0; i < scene.dropZones.length; i++) {
+        scene.socket.on('cardPlayedCraftZone', (socketId, cardsInCraftSpellZone) => {
 
-                    let tempDropZone = scene.dropZones[i];
+            if (socketId === scene.socket.id) {
 
-                    // tempDropZone === dropZone does not work
-                    // Whats the Chances two Drop Zones will be on top of eachother
-                    if (tempDropZone.name == "opponentCraftZone") {
+                scene.GameHandler.playerCraftSpellZone.forEach(d => d.destroy());
+                scene.GameHandler.playerCraftSpellZone = [];
 
-                        scene.DeckHandler.dealCard((tempDropZone.x - 350) + (tempDropZone.data.values.cards * 50), tempDropZone.y, cardName, "opponentCard");
-                        tempDropZone.data.values.cards++;
+                for (let i in cardsInCraftSpellZone) {
 
-                    }
+
+
+                    scene.GameHandler.playerCraftSpellZone.push(scene.DeckHandler.dealCard((scene.playerCraftZone.x - 350) + (i * 50), scene.playerCraftZone.y, cardsInCraftSpellZone[i], "playerCard", scene.playerCraftZone.name));
+
                 }
 
+            } else {
+
+                scene.GameHandler.opponentCraftSpellZone.forEach(d => d.destroy());
+                scene.GameHandler.opponentCraftSpellZone = [];
+
+                for (let i in cardsInCraftSpellZone) {
+
+                    scene.GameHandler.opponentCraftSpellZone.push(scene.DeckHandler.dealCard((scene.opponentCraftZone.x - 350) + (i * 50), scene.opponentCraftZone.y, cardsInCraftSpellZone[i], "opponentCard", scene.opponentCraftZone.name));
+
+                }
             }
+
+
+        })
+        
+        scene.socket.on('cardPlayedPlayZone', (socketId, cardsInPlayZone) => {
+
+            if (socketId === scene.socket.id) {
+
+                scene.GameHandler.playerPlayZone.forEach(d => d.destroy());
+                scene.GameHandler.playerPlayZone = [];
+
+                for (let i in cardsInPlayZone) {
+                    scene.GameHandler.playerPlayZone.push(scene.DeckHandler.dealCard((scene.playerPlayZone.x - 350) + (i * 50), scene.playerPlayZone.y, cardsInPlayZone[i], "playerCard", scene.playerPlayZone.name));
+                }
+
+            } else {
+
+                scene.GameHandler.opponentPlayZone.forEach(d => d.destroy());
+                scene.GameHandler.opponentPlayZone = [];
+
+                for (let i in cardsInPlayZone) {
+                    scene.GameHandler.opponentPlayZone.push(scene.DeckHandler.dealCard((scene.opponentPlayZone.x - 350) + (i * 50), scene.opponentPlayZone.y, cardsInPlayZone[i], "opponentCard", scene.opponentPlayZone.name));
+                }
+            }
+
         })
 
         scene.socket.on('setPlayersHP', (socketId, playerHP, opponentHP) => {
             if (socketId === scene.socket.id) {
                 scene.GameHandler.changeHP(playerHP, opponentHP);
+            }
+        })
+
+        scene.socket.on('setPlayerAreas', (socketId, opponentSocketId) => {
+            if (socketId === scene.socket.id) {
+                scene.playerCraftZone.socketId = socketId;
+                scene.opponentCraftZone.socketId = opponentSocketId;
+
+                //PlayZone
+            }
+        })
+
+        scene.socket.on('craftTextValidator', (socketId, isCraftText, craftSpellName) => {
+            if (socketId === scene.socket.id) {
+
+                if (isCraftText) {
+                    scene.craftText.setInteractive();
+                    scene.craftText.setColor('#36f802');
+
+                    scene.craftSpellCardPreview = scene.add.image(1100, 825, scene.GameHandler.craftSpellName);
+                    
+
+                } else {
+
+                }
             }
         })
 

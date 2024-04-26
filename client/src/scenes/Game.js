@@ -5,6 +5,7 @@ import GameHandler from '../helpers/GameHandler';
 import InteractiveHandler from '../helpers/InteractiveHandler';
 import SocketHandler from '../helpers/SocketHandler';
 import UIHandler from '../helpers/UIHandler';
+import CraftSpellHandler from '../helpers/CraftSpellHandler';
 
 export class Game extends Scene
 {
@@ -23,5 +24,7 @@ export class Game extends Scene
         this.UIHandler = new UIHandler(this);
         this.UIHandler.buildUI();
         this.InteractiveHandler = new InteractiveHandler(this);
+
+        this.CraftSpellHandler = new CraftSpellHandler(this);
     }
 }

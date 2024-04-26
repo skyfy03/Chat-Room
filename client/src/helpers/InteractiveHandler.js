@@ -2,6 +2,7 @@ export default class InteractiveHandler {
     constructor(scene) {
 
         scene.cardPreview = null;
+        scene.craftSpellCardPreview = null;
 
         scene.dealCards.on('pointerdown', () => {
             scene.socket.emit("dealCards", scene.socket.id);
@@ -18,13 +19,14 @@ export default class InteractiveHandler {
 
         scene.input.on('pointerover', (event, gameObjects) => {
             let pointer = scene.input.activePointer;
-            if (gameObjects[0].type === "Image" && gameObjects[0].data.list.name !== "cardBack") {
+
+            if (gameObjects[0].type === "Image" && gameObjects[0].data != null && gameObjects[0].data.list.name !== "cardBack") {
                 scene.cardPreview = scene.add.image(pointer.worldX, pointer.worldY, gameObjects[0].data.values.sprite).setScale(0.5, 0.5);
             };
         });
 
         scene.input.on('pointerout', (event, gameObjects) => {
-            if (gameObjects[0].type === "Image" && gameObjects[0].data.list.name !== "cardBack") {
+            if (gameObjects[0].type === "Image" && gameObjects[0].data != null && gameObjects[0].data.list.name !== "cardBack") {
                 scene.cardPreview.setVisible(false);
             };
         });
@@ -51,20 +53,73 @@ export default class InteractiveHandler {
         scene.input.on('drop', (pointer, gameObject, dropZone) => {
             if (scene.GameHandler.isMyTurn && scene.GameHandler.gameState === "Ready") {
 
-                for (let i = 0; i < scene.dropZones.length; i++) {
-                    let tempDropZone = scene.dropZones[i];
-                    if (tempDropZone === dropZone) {
+                //        scene.GameHandler.changePlayerCraftSpellZone();
+                //        if (craftTextBeforeDrop != scene.GameHandler.isCraftText) {
+                //            scene.socket.emit('craftTextValidator', scene.socket.id, scene.GameHandler.isCraftText, scene.GameHandler.craftSpellName);
+                //        }
 
-                        gameObject.x = (tempDropZone.x - 350) + (tempDropZone.data.values.cards * 50);
-                        gameObject.y = tempDropZone.y;
+                console.log(gameObject.data.values.dropZoneName);
+                console.log(dropZone.name);
+                
+                //Card is currently in players hand
+                //Plan on later to make player hand into a zone
+                if (gameObject.data.values.dropZoneName == "playerHand") {
 
-                        tempDropZone.data.values.cards++;
-                        //Set card undraggable
-                        scene.input.setDraggable(gameObject, false);
-                        scene.socket.emit('cardPlayed', gameObject.data.values.name, scene.socket.id, dropZone);
+                    if (dropZone.name === "playerCraftZone") {
+
+                        scene.socket.emit('removeCardPlayedInHand', scene.socket.id, gameObject.data.values.name);
+                        scene.socket.emit('cardPlayedCraftZone', scene.socket.id, gameObject.data.values.name);
+                        gameObject.destroy();
+
+                    } else if (dropZone.name === "playerPlayZone") {
+
+                        scene.socket.emit('removeCardPlayedInHand', scene.socket.id, gameObject.data.values.name);
+                        scene.socket.emit('cardPlayedPlayZone', scene.socket.id, gameObject.data.values.name);
+                        gameObject.destroy();
+
+                    }
+
+                } else {
+                    //Card Changed DropZones
+                    if (gameObject.data.values.dropZoneName !== dropZone.name) {
+
+                        if (dropZone.name === "playerCraftZone") {
+
+                            scene.socket.emit('removeCardPlayZone', scene.socket.id, gameObject.data.values.name);
+                            scene.socket.emit('cardPlayedCraftZone', scene.socket.id, gameObject.data.values.name);
+                            gameObject.destroy();
+
+                        } else if (dropZone.name === "playerPlayZone") {
+
+                            scene.socket.emit('removeCardCraftZone', scene.socket.id, gameObject.data.values.name);
+                            scene.socket.emit('cardPlayedPlayZone', scene.socket.id, gameObject.data.values.name);
+                            gameObject.destroy();
+
+                        }
 
                     }
                 }
+
+
+                //else if (gameObject.data.values.dropZoneName === "playerCraftZone" && dropZone.name === "playerPlayZone") {
+
+                //    //if (indexOfCardName != -1) {
+                //    //    let cardImage = scene.GameHandler.playerCraftSpellZone[indexOfCardName];
+                //    //}
+
+
+                //    gameObject.destroy();
+
+                //}
+
+                //{
+
+
+
+                //}
+
+
+
             }
             else {
                 gameObject.x = gameObject.input.dragStartX;
@@ -82,6 +137,19 @@ export default class InteractiveHandler {
         })
 
         scene.endTurnButton.on('pointerout', () => {
+            scene.endTurnButton.setColor('#36f802')
+        })
+
+        scene.craftText.on('pointerdown', () => {
+            //scene.socket.emit("changeTurn", scene.socket.id);
+            scene.endTurnButton.disableInteractive();
+        })
+
+        scene.craftText.on('pointerover', () => {
+            scene.endTurnButton.setColor('#87f802');
+        })
+
+        scene.craftText.on('pointerout', () => {
             scene.endTurnButton.setColor('#36f802')
         })
 
