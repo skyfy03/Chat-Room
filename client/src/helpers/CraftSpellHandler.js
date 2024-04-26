@@ -28,11 +28,11 @@ export default class CraftSpellHandler {
             for (let i = 0; i < cards.length; i++) {
                 let tempCard = cards[i];
 
-                if (tempCard === "earthElement") {
+                if (tempCard.data.values.sprite === "earthElement") {
                     earthElementMinReq = earthElementMinReq - 1;
 
                 }
-                if (tempCard=== "attackActionCard") {
+                if (tempCard.data.values.sprite === "attackActionCard") {
                     attackActionCardMaxReq = attackActionCardMaxReq - 1;
                 }
             }

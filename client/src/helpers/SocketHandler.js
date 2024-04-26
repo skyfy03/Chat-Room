@@ -62,6 +62,12 @@ export default class SocketHandler {
                     scene.GameHandler.playerCraftSpellZone.push(scene.DeckHandler.dealCard((scene.playerCraftZone.x - 350) + (i * 50), scene.playerCraftZone.y, cardsInCraftSpellZone[i], "playerCard", scene.playerCraftZone.name));
                 }
 
+                let craftTextBeforeDrop = scene.GameHandler.isCraftText;
+                scene.GameHandler.changePlayerCraftSpellZone();
+                if (craftTextBeforeDrop != scene.GameHandler.isCraftText) {
+                    scene.socket.emit('craftTextValidator', scene.socket.id, scene.GameHandler.isCraftText, scene.GameHandler.craftSpellName);
+                }
+
             }
             else if (socketId !== scene.socket.id) {
 
@@ -122,10 +128,15 @@ export default class SocketHandler {
 
                 for (let i in cardsInCraftSpellZone) {
 
-
-
                     scene.GameHandler.playerCraftSpellZone.push(scene.DeckHandler.dealCard((scene.playerCraftZone.x - 350) + (i * 50), scene.playerCraftZone.y, cardsInCraftSpellZone[i], "playerCard", scene.playerCraftZone.name));
 
+                }
+
+
+                let craftTextBeforeDrop = scene.GameHandler.isCraftText;
+                scene.GameHandler.changePlayerCraftSpellZone();
+                if (craftTextBeforeDrop != scene.GameHandler.isCraftText) {
+                    scene.socket.emit('craftTextValidator', scene.socket.id, scene.GameHandler.isCraftText, scene.GameHandler.craftSpellName);
                 }
 
             } else {
@@ -188,12 +199,24 @@ export default class SocketHandler {
                     scene.craftText.setInteractive();
                     scene.craftText.setColor('#36f802');
 
-                    scene.craftSpellCardPreview = scene.add.image(1100, 825, scene.GameHandler.craftSpellName);
-                    
+                    scene.playerCraftSpellCardPreview = scene.add.image(1100, 825, scene.GameHandler.craftSpellName);
 
                 } else {
 
+                    scene.craftText.disableInteractive();
+                    scene.craftText.setColor('#d70808');
+                    scene.playerCraftSpellCardPreview.destroy();
+
                 }
+
+            } else if (socketId !== scene.socket.id) {
+
+                if (isCraftText) {
+                    scene.opponentCraftSpellCardPreview = scene.add.image(1100, 255, "cardBack");
+                } else {
+                    scene.opponentCraftSpellCardPreview.destroy();
+                }
+
             }
         })
 

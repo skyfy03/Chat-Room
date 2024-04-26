@@ -2,7 +2,9 @@ export default class InteractiveHandler {
     constructor(scene) {
 
         scene.cardPreview = null;
-        scene.craftSpellCardPreview = null;
+
+        scene.playerCraftSpellCardPreview = null;
+
 
         scene.dealCards.on('pointerdown', () => {
             scene.socket.emit("dealCards", scene.socket.id);
@@ -53,14 +55,6 @@ export default class InteractiveHandler {
         scene.input.on('drop', (pointer, gameObject, dropZone) => {
             if (scene.GameHandler.isMyTurn && scene.GameHandler.gameState === "Ready") {
 
-                //        scene.GameHandler.changePlayerCraftSpellZone();
-                //        if (craftTextBeforeDrop != scene.GameHandler.isCraftText) {
-                //            scene.socket.emit('craftTextValidator', scene.socket.id, scene.GameHandler.isCraftText, scene.GameHandler.craftSpellName);
-                //        }
-
-                console.log(gameObject.data.values.dropZoneName);
-                console.log(dropZone.name);
-                
                 //Card is currently in players hand
                 //Plan on later to make player hand into a zone
                 if (gameObject.data.values.dropZoneName == "playerHand") {
@@ -80,6 +74,7 @@ export default class InteractiveHandler {
                     }
 
                 } else {
+
                     //Card Changed DropZones
                     if (gameObject.data.values.dropZoneName !== dropZone.name) {
 
@@ -100,26 +95,6 @@ export default class InteractiveHandler {
                     }
                 }
 
-
-                //else if (gameObject.data.values.dropZoneName === "playerCraftZone" && dropZone.name === "playerPlayZone") {
-
-                //    //if (indexOfCardName != -1) {
-                //    //    let cardImage = scene.GameHandler.playerCraftSpellZone[indexOfCardName];
-                //    //}
-
-
-                //    gameObject.destroy();
-
-                //}
-
-                //{
-
-
-
-                //}
-
-
-
             }
             else {
                 gameObject.x = gameObject.input.dragStartX;
@@ -133,7 +108,7 @@ export default class InteractiveHandler {
         })
 
         scene.endTurnButton.on('pointerover', () => {
-            scene.endTurnButton.setColor('#87f802');
+            scene.endTurnButton.setColor('#99e550');
         })
 
         scene.endTurnButton.on('pointerout', () => {
@@ -141,16 +116,15 @@ export default class InteractiveHandler {
         })
 
         scene.craftText.on('pointerdown', () => {
-            //scene.socket.emit("changeTurn", scene.socket.id);
-            scene.endTurnButton.disableInteractive();
+            //scene.endTurnButton.disableInteractive();
         })
 
         scene.craftText.on('pointerover', () => {
-            scene.endTurnButton.setColor('#87f802');
+            scene.craftText.setColor('#99e550');
         })
 
         scene.craftText.on('pointerout', () => {
-            scene.endTurnButton.setColor('#36f802')
+            scene.craftText.setColor('#36f802')
         })
 
     }
