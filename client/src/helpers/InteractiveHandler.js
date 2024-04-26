@@ -107,7 +107,9 @@ export default class InteractiveHandler {
         })
 
         scene.craftText.on('pointerdown', () => {
-            //scene.endTurnButton.disableInteractive();
+            scene.socket.emit("removeAllCraftSpell", scene.socket.id);
+            scene.socket.emit("craftSpell", scene.socket.id, scene.playerCraftSpellCardPreview.data.values.sprite, scene.CraftSpellHandler.cardValidObject.cardsNotUsed);
+            scene.craftText.disableInteractive();
         })
 
         scene.craftText.on('pointerover', () => {

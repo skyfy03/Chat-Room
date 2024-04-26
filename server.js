@@ -144,6 +144,27 @@ io.on('connection', function (socket) {
         io.emit('craftTextValidator', socketId, isCraftText, craftSpellName);
     });
 
+    socket.on('removeAllCraftSpell', function (socketId) {
+
+        players[socketId].inCraftSpellZone = [];
+
+        console.log(players);
+
+        io.emit('removeAllCraftSpell', socketId);
+    });
+
+    socket.on('craftSpell', function (socketId, cardCraftSpellName, cardsNotUsed) {
+
+        players[socketId].inHand.push(cardCraftSpellName);
+
+        cardsNotUsed.forEach(sprite => players[socketId].inCraftSpellZone.push(sprite));
+
+        console.log(players);
+
+        io.emit('cardPlayedCraftZone', socketId, players[socketId].inCraftSpellZone);
+        io.emit('cardPlayedPlayerArea', socketId, players[socketId].inHand);
+    });
+
     socket.on('disconnect', function () {
         console.log('A user disconnected: ' + socket.id);
         delete players[socket.id];

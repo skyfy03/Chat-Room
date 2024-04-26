@@ -176,7 +176,7 @@ export default class SocketHandler {
 
 
         })
-        
+
         scene.socket.on('cardPlayedPlayZone', (socketId, cardsInPlayZone) => {
 
             if (socketId === scene.socket.id) {
@@ -216,13 +216,17 @@ export default class SocketHandler {
         })
 
         scene.socket.on('craftTextValidator', (socketId, isCraftText, craftSpellName) => {
+
             if (socketId === scene.socket.id) {
 
                 if (isCraftText) {
+
                     scene.craftText.setInteractive();
                     scene.craftText.setColor('#36f802');
 
-                    scene.playerCraftSpellCardPreview = scene.add.image(1100, 825, scene.GameHandler.craftSpellName);
+                    scene.playerCraftSpellCardPreview = scene.add.image(1100, 825, scene.GameHandler.craftSpellName).setData({
+                        "sprite": scene.GameHandler.craftSpellName
+                    });
 
                 } else {
 
@@ -241,7 +245,31 @@ export default class SocketHandler {
                 }
 
             }
+
         })
+
+        scene.socket.on('removeAllCraftSpell', (socketId) => {
+
+            if (socketId === scene.socket.id) {
+
+                scene.GameHandler.playerCraftSpellZone.forEach(d => d.destroy());
+                scene.GameHandler.playerCraftSpellZone = [];
+
+                scene.GameHandler.changePlayerCraftSpellZone();
+                scene.socket.emit('craftTextValidator', scene.socket.id, scene.GameHandler.isCraftText, scene.GameHandler.craftSpellName);
+
+
+            } else {
+
+                scene.GameHandler.opponentCraftSpellZone.forEach(d => d.destroy());
+                scene.GameHandler.opponentCraftSpellZone = [];
+
+            }
+
+
+        })
+
+
 
     }
 }
