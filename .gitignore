@@ -6,3 +6,5 @@
 *.wsuo
 /.vs/slnx.sqlite
 /.vs/VSWorkspaceState.json
+*.sqlite
+/.vs

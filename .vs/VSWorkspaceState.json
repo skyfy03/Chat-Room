@@ -2,10 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\client",
-    "\\client\\public\\assets",
     "\\client\\src",
     "\\client\\src\\helpers",
-    "\\client\\src\\scenes"
+    "\\client\\src\\helpers\\cards"
   ],
   "SelectedNode": "\\client\\src\\helpers\\DeckHandler.js",
   "PreviewInSolutionExplorer": false
