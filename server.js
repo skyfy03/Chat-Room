@@ -95,6 +95,15 @@ io.on('connection', function (socket) {
 
     })
 
+    socket.on('cardPlayedPlayerArea', function (socketId, cardName) {
+
+        players[socketId].inHand.push(cardName);
+
+        console.log(players);
+
+        io.emit('cardPlayedPlayerArea', socketId, players[socketId].inHand);
+    });
+
     socket.on('cardPlayedCraftZone', function (socketId, cardName) {
 
         players[socketId].inCraftSpellZone.push(cardName);

@@ -55,44 +55,35 @@ export default class InteractiveHandler {
         scene.input.on('drop', (pointer, gameObject, dropZone) => {
             if (scene.GameHandler.isMyTurn && scene.GameHandler.gameState === "Ready") {
 
-                //Card is currently in players hand
-                //Plan on later to make player hand into a zone
-                if (gameObject.data.values.dropZoneName == "playerHand") {
+                //Card Changed DropZones
+                if (gameObject.data.values.dropZoneName !== dropZone.name) {
 
-                    if (dropZone.name === "playerCraftZone") {
-
+                    //Remove Card from previous drop zone
+                    if (gameObject.data.values.dropZoneName === "playerHandArea") {
                         scene.socket.emit('removeCardPlayedInHand', scene.socket.id, gameObject.data.values.name);
+                    } else if (gameObject.data.values.dropZoneName === "playerCraftZone") {
+                        scene.socket.emit('removeCardCraftZone', scene.socket.id, gameObject.data.values.name);
+                    } else if (gameObject.data.values.dropZoneName === "playerPlayZone") {
+                        scene.socket.emit('removeCardPlayZone', scene.socket.id, gameObject.data.values.name);
+                    }
+
+                    //Play Card in drop zone
+                    if (dropZone.name === "playerHandArea") {
+
+                        scene.socket.emit('cardPlayedPlayerArea', scene.socket.id, gameObject.data.values.name);
+                        
+                    } else if (dropZone.name === "playerCraftZone") {
+
                         scene.socket.emit('cardPlayedCraftZone', scene.socket.id, gameObject.data.values.name);
-                        gameObject.destroy();
 
                     } else if (dropZone.name === "playerPlayZone") {
 
-                        scene.socket.emit('removeCardPlayedInHand', scene.socket.id, gameObject.data.values.name);
                         scene.socket.emit('cardPlayedPlayZone', scene.socket.id, gameObject.data.values.name);
-                        gameObject.destroy();
 
                     }
 
-                } else {
+                    gameObject.destroy();
 
-                    //Card Changed DropZones
-                    if (gameObject.data.values.dropZoneName !== dropZone.name) {
-
-                        if (dropZone.name === "playerCraftZone") {
-
-                            scene.socket.emit('removeCardPlayZone', scene.socket.id, gameObject.data.values.name);
-                            scene.socket.emit('cardPlayedCraftZone', scene.socket.id, gameObject.data.values.name);
-                            gameObject.destroy();
-
-                        } else if (dropZone.name === "playerPlayZone") {
-
-                            scene.socket.emit('removeCardCraftZone', scene.socket.id, gameObject.data.values.name);
-                            scene.socket.emit('cardPlayedPlayZone', scene.socket.id, gameObject.data.values.name);
-                            gameObject.destroy();
-
-                        }
-
-                    }
                 }
 
             }

@@ -110,13 +110,36 @@ export default class SocketHandler {
         scene.socket.on('dealCards', (socketId, cards) => {
             if (socketId === scene.socket.id) {
                 for (let i in cards) {
-                    let card = scene.GameHandler.playerHand.push(scene.DeckHandler.dealCard(155 + (i * 155), 1000, cards[i], "playerCard", "playerHand"));
+                    scene.GameHandler.playerHand.push(scene.DeckHandler.dealCard(155 + (i * 155), 1000, cards[i], "playerCard", scene.playerHandArea.name));
                 }
             } else {
                 for (let i in cards) {
-                    let card = scene.GameHandler.opponentHand.push(scene.DeckHandler.dealCard(155 + (i * 155), 80, "cardBack", "opponentCard", "opponentHand"));
+                    scene.GameHandler.opponentHand.push(scene.DeckHandler.dealCard(155 + (i * 155), 80, "cardBack", "opponentCard", scene.opponentHandArea.name));
                 }
             }
+        })
+
+        scene.socket.on('cardPlayedPlayerArea', (socketId, cardsInHand) => {
+
+            if (socketId === scene.socket.id) {
+
+                scene.GameHandler.playerHand.forEach(d => d.destroy());
+                scene.GameHandler.playerHand = [];
+
+                for (let i in cardsInHand) {
+                    scene.GameHandler.playerHand.push(scene.DeckHandler.dealCard((scene.playerHandArea.x - 350) + (i * 50), scene.playerHandArea.y, cardsInHand[i], "playerCard", scene.playerHandArea.name));
+                }
+
+            } else {
+
+                scene.GameHandler.opponentHand.forEach(d => d.destroy());
+                scene.GameHandler.opponentHand = [];
+
+                for (let i in cardsInHand) {
+                    scene.GameHandler.opponentHand.push(scene.DeckHandler.dealCard((scene.opponentHandArea.x - 350) + (i * 50), scene.opponentHandArea.y, "cardBack", "opponentCard", scene.opponentHandArea.name));
+                }
+            }
+
         })
 
         scene.socket.on('cardPlayedCraftZone', (socketId, cardsInCraftSpellZone) => {
