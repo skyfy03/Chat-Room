@@ -224,9 +224,7 @@ export default class SocketHandler {
                     scene.craftText.setInteractive();
                     scene.craftText.setColor('#36f802');
 
-                    scene.playerCraftSpellCardPreview = scene.add.image(1100, 825, scene.GameHandler.craftSpellName).setData({
-                        "sprite": scene.GameHandler.craftSpellName
-                    });
+                    scene.playerCraftSpellCardPreview = scene.add.image(1100, 825, scene.GameHandler.craftSpellName);
 
                 } else {
 
@@ -268,7 +266,6 @@ export default class SocketHandler {
 
 
         })
-
 
 
     }

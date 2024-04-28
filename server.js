@@ -97,7 +97,18 @@ io.on('connection', function (socket) {
 
     socket.on('cardPlayedPlayerArea', function (socketId, cardName) {
 
+        //let tempObj = {};
+        //tempObj[cardName] = {
+        //    name: cardName,
+        //    sprite: cardName,
+        //    cardDamage: 0
+        //};
+        
         players[socketId].inHand.push(cardName);
+
+        //let tempP = players[socketId];
+        //let tempInH = tempP.inHand;
+        //console.log(tempInH);
 
         console.log(players);
 
@@ -153,7 +164,7 @@ io.on('connection', function (socket) {
         io.emit('removeAllCraftSpell', socketId);
     });
 
-    socket.on('craftSpell', function (socketId, cardCraftSpellName, cardsNotUsed) {
+    socket.on('craftSpell', function (socketId, cardCraftSpellName, cardCraftSpellDamage, cardsNotUsed) {
 
         players[socketId].inHand.push(cardCraftSpellName);
 

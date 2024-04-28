@@ -71,7 +71,7 @@ export default class InteractiveHandler {
                     if (dropZone.name === "playerHandArea") {
 
                         scene.socket.emit('cardPlayedPlayerArea', scene.socket.id, gameObject.data.values.name);
-                        
+
                     } else if (dropZone.name === "playerCraftZone") {
 
                         scene.socket.emit('cardPlayedCraftZone', scene.socket.id, gameObject.data.values.name);
@@ -108,7 +108,7 @@ export default class InteractiveHandler {
 
         scene.craftText.on('pointerdown', () => {
             scene.socket.emit("removeAllCraftSpell", scene.socket.id);
-            scene.socket.emit("craftSpell", scene.socket.id, scene.playerCraftSpellCardPreview.data.values.sprite, scene.CraftSpellHandler.cardValidObject.cardsNotUsed);
+            scene.socket.emit("craftSpell", scene.socket.id, scene.CraftSpellHandler.cardValidObject.validCardName, scene.CraftSpellHandler.cardValidObject.cardDamage, scene.CraftSpellHandler.cardValidObject.cardsNotUsed);
             scene.craftText.disableInteractive();
         })
 
