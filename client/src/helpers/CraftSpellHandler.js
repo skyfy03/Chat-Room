@@ -7,11 +7,13 @@ export default class CraftSpellHandler {
 
             this.cardValidObject = {
                 cardValid: false,
-                validCardName: ""
+                validCardName: "",
+                cardsNotUsed: []
             }
 
             this.cardValidObject.cardValid = false;
             this.cardValidObject.validCardName = "";
+            this.cardValidObject.cardsNotUsed = {};
             this.cardValidObject = this.throwRock(this.cardValidObject, cards);
 
             if (this.cardValidObject.cardValid) {
@@ -28,19 +30,29 @@ export default class CraftSpellHandler {
             for (let i = 0; i < cards.length; i++) {
                 let tempCard = cards[i];
 
-                if (tempCard === "earthElement") {
+                if (tempCard.data.values.sprite === "earthElement") {
                     earthElementMinReq = earthElementMinReq - 1;
 
-                }
-                if (tempCard=== "attackActionCard") {
+                } else if (tempCard.data.values.sprite === "attackActionCard" && attackActionCardMaxReq == 1) {
                     attackActionCardMaxReq = attackActionCardMaxReq - 1;
+                } else {
+                    cardValidObj.cardsNotUsed[tempCard.data.values.name] = {
+                        name: tempCard.data.values.name,
+                        sprite: tempCard.data.values.sprite,
+                        cardDamage: 0
+                    };
                 }
             }
 
             if (earthElementMinReq <= 0 && attackActionCardMaxReq <= 0) {
                 cardValidObj.cardValid = true;
+                cardValidObj.cardDamage = 1;
             } else {
                 cardValidObj.cardValid = false;
+            }
+
+            if (earthElementMinReq < 0) {
+                cardValidObj.cardDamage * ((-1 * earthElementMinReq) + 1)
             }
 
             if (cardValidObj.cardValid) {
