@@ -58,6 +58,9 @@ export default class InteractiveHandler {
                 //Card Changed DropZones
                 if (gameObject.data.values.dropZoneName !== dropZone.name) {
 
+                    console.log(gameObject.data.values.dropZoneName);
+                    console.log(dropZone.name);
+
                     //Remove Card from previous drop zone
                     if (gameObject.data.values.dropZoneName === "playerHandArea") {
                         scene.socket.emit('removeCardPlayedInHand', scene.socket.id, gameObject.data.values.name);
@@ -73,7 +76,7 @@ export default class InteractiveHandler {
                         scene.socket.emit('cardPlayedPlayerArea', scene.socket.id, gameObject.data.values.name);
 
                     } else if (dropZone.name === "playerCraftZone") {
-
+                        
                         scene.socket.emit('cardPlayedCraftZone', scene.socket.id, gameObject.data.values.name);
 
                     } else if (dropZone.name === "playerPlayZone") {
@@ -107,8 +110,11 @@ export default class InteractiveHandler {
         })
 
         scene.craftText.on('pointerdown', () => {
+
             scene.socket.emit("removeAllCraftSpell", scene.socket.id);
-            scene.socket.emit("craftSpell", scene.socket.id, scene.CraftSpellHandler.cardValidObject.validCardName, scene.CraftSpellHandler.cardValidObject.cardDamage, scene.CraftSpellHandler.cardValidObject.cardsNotUsed);
+
+            scene.socket.emit("craftSpell", scene.socket.id, scene.CraftSpellHandler.cardValidObject.validCardName, scene.CraftSpellHandler.cardValidObject.cardsNotUsed);
+
             scene.craftText.disableInteractive();
         })
 

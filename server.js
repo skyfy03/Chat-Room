@@ -22,10 +22,10 @@ io.on('connection', function (socket) {
     console.log('A user connected: ' + socket.id);
 
     players[socket.id] = {
-        inDeck: [],
-        inHand: [],
-        inCraftSpellZone: [],
-        inPlayZone: [],
+        inDeck: {},
+        inHand: {},
+        inCraftSpellZone: {},
+        inPlayZone: {},
         playerHP: 50,
         opponentHP: 50,
         isPlayerA: false
@@ -38,22 +38,65 @@ io.on('connection', function (socket) {
 
     io.emit('setPlayersHP', socket.id, players[socket.id].playerHP, players[socket.id].opponentHP);
 
+        //Gets specific object
+        //console.log(players[socketId].inDeck['fireElement']);
+
+        //
+        //console.log(Object.keys(players[socketId].inDeck));
+
+        //
+        //Object.keys(players[socketId].inDeck).forEach(d => console.log(d));
+
+        //
+        //Object.keys(players[socketId].inDeck).forEach(d => console.log(players[socketId].inDeck[d]));
+
     socket.on('dealDeck', function (socketId) {
-        players[socketId].inDeck = shuffle(["attackActionCard", "earthElement", "fireElement", "waterElement", "windElement"]);
+
+        let deckArr = shuffle(["attackActionCard", "earthElement", "fireElement", "waterElement", "windElement"]);
+
+        for (let i = 0; i < deckArr.length; i++) {
+            let cardSprite = deckArr[i];
+            players[socketId].inDeck[cardSprite] = {
+                name: cardSprite,
+                sprite: cardSprite,
+                cardDamage: 0
+            };
+        }
+
         console.log(players);
+
         if (Object.keys(players).length < 2) return;
 
         io.emit('changeGameState', "Initializing");
     })
 
     socket.on('dealCards', function (socketId) {
-        for (let i = 0; i < 5; i++) {
-            if (players[socketId].inDeck.length === 0) {
-                players[socketId].inDeck = shuffle(["attackActionCard", "earthElement", "fireElement", "waterElement", "windElement"]);
-            }
-            players[socketId].inHand.push(players[socketId].inDeck.shift());
-        }
+
+        //OLD Logic to refill dealCards if out of cards
+        //for (let i = 0; i < 5; i++) {
+        //    if (players[socketId].inDeck.length === 0) {
+        //        players[socketId].inDeck = shuffle(["attackActionCard", "earthElement", "fireElement", "waterElement", "windElement"]);
+        //    }
+        //    players[socketId].inHand.push(players[socketId].inDeck.shift());
+        //}
+
+        //Adding all cards from inDeck into inHand
+
+        Object.keys(players[socketId].inDeck).forEach(
+            d =>
+                players[socketId].inHand[players[socketId].inDeck[d].name] =
+                {
+                    name: players[socketId].inDeck[d].name,
+                    sprite: players[socketId].inDeck[d].sprite,
+                    cardDamage: players[socketId].inDeck[d].cardDamage
+                }
+        );
+
+        //Remove all cards from inDeck
+        players[socketId].inDeck = {};
+
         console.log(players);
+
         io.emit('dealCards', socketId, players[socketId].inHand);
         readyCheck++;
         if (readyCheck >= 2) {
@@ -66,8 +109,7 @@ io.on('connection', function (socket) {
 
         //Currently assumed to be in player hand. which is null on the card gameObject
         //Remove Card from hand.
-        let indexOfCardName = players[socketId].inHand.indexOf(cardName);
-        players[socketId].inHand.splice(indexOfCardName, 1);
+        delete players[socketId].inHand[cardName];
 
         io.emit('removeCardPlayedInHand', socketId);
 
@@ -77,8 +119,7 @@ io.on('connection', function (socket) {
 
         //Currently assumed to be in player hand. which is null on the card gameObject
         //Remove Card from hand.
-        let indexOfCardName = players[socketId].inPlayZone.indexOf(cardName);
-        players[socketId].inPlayZone.splice(indexOfCardName, 1);
+        delete players[socketId].inPlayZone[cardName];
 
         io.emit('removeCardPlayedPlayZone', socketId, players[socketId].inPlayZone);
 
@@ -88,27 +129,19 @@ io.on('connection', function (socket) {
 
         //Currently assumed to be in player hand. which is null on the card gameObject
         //Remove Card from hand.
-        let indexOfCardName = players[socketId].inCraftSpellZone.indexOf(cardName);
-        players[socketId].inCraftSpellZone.splice(indexOfCardName, 1);
+        delete players[socketId].inCraftSpellZone[cardName];
 
-        io.emit('removeCardPlayedCraftZone', socketId, cardName, players[socketId].inCraftSpellZone);
+        io.emit('removeCardPlayedCraftZone', socketId, players[socketId].inCraftSpellZone);
 
     })
 
     socket.on('cardPlayedPlayerArea', function (socketId, cardName) {
 
-        //let tempObj = {};
-        //tempObj[cardName] = {
-        //    name: cardName,
-        //    sprite: cardName,
-        //    cardDamage: 0
-        //};
-        
-        players[socketId].inHand.push(cardName);
-
-        //let tempP = players[socketId];
-        //let tempInH = tempP.inHand;
-        //console.log(tempInH);
+        players[socketId].inHand[cardName] = {
+            name: cardName,
+            sprite: cardName,
+            cardDamage: 0
+        };
 
         console.log(players);
 
@@ -117,7 +150,11 @@ io.on('connection', function (socket) {
 
     socket.on('cardPlayedCraftZone', function (socketId, cardName) {
 
-        players[socketId].inCraftSpellZone.push(cardName);
+        players[socketId].inCraftSpellZone[cardName] = {
+            name: cardName,
+            sprite: cardName,
+            cardDamage: 0
+        };
 
         console.log(players);
 
@@ -126,7 +163,11 @@ io.on('connection', function (socket) {
 
     socket.on('cardPlayedPlayZone', function (socketId, cardName) {
 
-        players[socketId].inPlayZone.push(cardName);
+        players[socketId].inPlayZone[cardName] = {
+            name: cardName,
+            sprite: cardName,
+            cardDamage: 0
+        };
 
         console.log(players);
 
@@ -157,18 +198,32 @@ io.on('connection', function (socket) {
 
     socket.on('removeAllCraftSpell', function (socketId) {
 
-        players[socketId].inCraftSpellZone = [];
+        players[socketId].inCraftSpellZone = {};
 
         console.log(players);
 
         io.emit('removeAllCraftSpell', socketId);
     });
 
-    socket.on('craftSpell', function (socketId, cardCraftSpellName, cardCraftSpellDamage, cardsNotUsed) {
+    socket.on('craftSpell', function (socketId, cardCraftSpellName, cardsNotUsed) {
 
-        players[socketId].inHand.push(cardCraftSpellName);
+        players[socketId].inHand[cardCraftSpellName] = {
+            name: cardCraftSpellName,
+            sprite: cardCraftSpellName,
+            cardDamage: 0
+        };
 
-        cardsNotUsed.forEach(sprite => players[socketId].inCraftSpellZone.push(sprite));
+        console.log(cardsNotUsed);
+
+        Object.keys(cardsNotUsed).forEach(
+            tempCardKey =>
+                players[socketId].inCraftSpellZone[cardsNotUsed[tempCardKey].name] =
+                {
+                    name: cardsNotUsed[tempCardKey].name,
+                    sprite: cardsNotUsed[tempCardKey].sprite,
+                    cardDamage: cardsNotUsed[tempCardKey].cardDamage
+                }
+        );
 
         console.log(players);
 

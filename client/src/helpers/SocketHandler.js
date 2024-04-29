@@ -51,16 +51,13 @@ export default class SocketHandler {
 
         })
 
-        scene.socket.on('removeCardPlayedCraftZone', (socketId, cardName, cardsInCraftSpellZone) => {
+        scene.socket.on('removeCardPlayedCraftZone', (socketId, cardsInCraftSpellZone) => {
 
             if (socketId === scene.socket.id) {
 
-                scene.GameHandler.playerCraftSpellZone.forEach(d => d.destroy());
-                scene.GameHandler.playerCraftSpellZone = [];
+                scene.GameHandler.playerCraftSpellZone = this.removeAllCardsInZone(scene.GameHandler.playerCraftSpellZone);
 
-                for (let i in cardsInCraftSpellZone) {
-                    scene.GameHandler.playerCraftSpellZone.push(scene.DeckHandler.dealCard((scene.playerCraftZone.x - 350) + (i * 50), scene.playerCraftZone.y, cardsInCraftSpellZone[i], "playerCard", scene.playerCraftZone.name));
-                }
+                scene.GameHandler.playerCraftSpellZone = this.addAllCardsInZone(cardsInCraftSpellZone, scene.GameHandler.playerCraftSpellZone, scene.playerCraftZone, "playerCard");
 
                 let craftTextBeforeDrop = scene.GameHandler.isCraftText;
                 scene.GameHandler.changePlayerCraftSpellZone();
@@ -71,12 +68,9 @@ export default class SocketHandler {
             }
             else if (socketId !== scene.socket.id) {
 
-                scene.GameHandler.opponentCraftSpellZone.forEach(d => d.destroy());
-                scene.GameHandler.opponentCraftSpellZone = [];
+                scene.GameHandler.opponentCraftSpellZone = this.removeAllCardsInZone(scene.GameHandler.opponentCraftSpellZone);
 
-                for (let i in cardsInCraftSpellZone) {
-                    scene.GameHandler.opponentCraftSpellZone.push(scene.DeckHandler.dealCard((scene.opponentCraftZone.x - 350) + (i * 50), scene.opponentCraftZone.y, cardsInCraftSpellZone[i], "opponentCard", scene.opponentCraftZone.name));
-                }
+                scene.GameHandler.opponentCraftSpellZone = this.addAllCardsInZone(cardsInCraftSpellZone, scene.GameHandler.opponentCraftSpellZone, scene.opponentCraftZone, "opponentCard");
 
             }
 
@@ -86,36 +80,31 @@ export default class SocketHandler {
 
             if (socketId === scene.socket.id) {
 
-                scene.GameHandler.playerPlayZone.forEach(d => d.destroy());
-                scene.GameHandler.playerPlayZone = [];
+                scene.GameHandler.playerPlayZone = this.removeAllCardsInZone(scene.GameHandler.playerPlayZone);
 
-                for (let i in cardsInPlayZone) {
-                    scene.GameHandler.playerPlayZone.push(scene.DeckHandler.dealCard((scene.playerPlayZone.x - 350) + (i * 50), scene.playerPlayZone.y, cardsInPlayZone[i], "playerCard", scene.playerPlayZone.name));
-                }
+                scene.GameHandler.playerPlayZone = this.addAllCardsInZone(cardsInPlayZone, scene.GameHandler.playerPlayZone, scene.playerPlayZone, "playerCard");
 
             }
             else if (socketId !== scene.socket.id) {
 
-                scene.GameHandler.opponentPlayZone.forEach(d => d.destroy());
-                scene.GameHandler.opponentPlayZone = [];
+                scene.GameHandler.opponentPlayZone = this.removeAllCardsInZone(scene.GameHandler.opponentPlayZone);
 
-                for (let i in cardsInPlayZone) {
-                    scene.GameHandler.opponentPlayZone.push(scene.DeckHandler.dealCard((scene.opponentPlayZone.x - 350) + (i * 50), scene.opponentPlayZone.y, cardsInPlayZone[i], "opponentCard", scene.opponentPlayZone.name));
-                }
+                scene.GameHandler.opponentPlayZone = this.addAllCardsInZone(cardsInPlayZone, scene.GameHandler.opponentPlayZone, scene.opponentPlayZone, "opponentCard");
                 
             }
 
         })
 
         scene.socket.on('dealCards', (socketId, cards) => {
+
             if (socketId === scene.socket.id) {
-                for (let i in cards) {
-                    scene.GameHandler.playerHand.push(scene.DeckHandler.dealCard(155 + (i * 155), 1000, cards[i], "playerCard", scene.playerHandArea.name));
-                }
+
+                scene.GameHandler.playerHand = this.addAllCardsInZone(cards, scene.GameHandler.playerHand, scene.playerHandArea, "playerCard");
+
             } else {
-                for (let i in cards) {
-                    scene.GameHandler.opponentHand.push(scene.DeckHandler.dealCard(155 + (i * 155), 80, "cardBack", "opponentCard", scene.opponentHandArea.name));
-                }
+
+                scene.GameHandler.opponentHand = this.addAllCardsInZone(cards, scene.GameHandler.opponentHand, scene.opponentHandArea, "opponentCard");
+
             }
         })
 
@@ -123,21 +112,16 @@ export default class SocketHandler {
 
             if (socketId === scene.socket.id) {
 
-                scene.GameHandler.playerHand.forEach(d => d.destroy());
-                scene.GameHandler.playerHand = [];
+                scene.GameHandler.playerHand = this.removeAllCardsInZone(scene.GameHandler.playerHand);
 
-                for (let i in cardsInHand) {
-                    scene.GameHandler.playerHand.push(scene.DeckHandler.dealCard((scene.playerHandArea.x - 350) + (i * 50), scene.playerHandArea.y, cardsInHand[i], "playerCard", scene.playerHandArea.name));
-                }
+                scene.GameHandler.playerHand = this.addAllCardsInZone(cardsInHand, scene.GameHandler.playerHand, scene.playerHandArea, "playerCard");
 
             } else {
 
-                scene.GameHandler.opponentHand.forEach(d => d.destroy());
-                scene.GameHandler.opponentHand = [];
+                scene.GameHandler.opponentHand = this.removeAllCardsInZone(scene.GameHandler.opponentHand);
 
-                for (let i in cardsInHand) {
-                    scene.GameHandler.opponentHand.push(scene.DeckHandler.dealCard((scene.opponentHandArea.x - 350) + (i * 50), scene.opponentHandArea.y, "cardBack", "opponentCard", scene.opponentHandArea.name));
-                }
+                scene.GameHandler.opponentHand = this.addAllCardsInZone(cardsInHand, scene.GameHandler.opponentHand, scene.opponentHandArea, "opponentCard");
+
             }
 
         })
@@ -146,14 +130,9 @@ export default class SocketHandler {
 
             if (socketId === scene.socket.id) {
 
-                scene.GameHandler.playerCraftSpellZone.forEach(d => d.destroy());
-                scene.GameHandler.playerCraftSpellZone = [];
+                scene.GameHandler.playerCraftSpellZone = this.removeAllCardsInZone(scene.GameHandler.playerCraftSpellZone);
 
-                for (let i in cardsInCraftSpellZone) {
-
-                    scene.GameHandler.playerCraftSpellZone.push(scene.DeckHandler.dealCard((scene.playerCraftZone.x - 350) + (i * 50), scene.playerCraftZone.y, cardsInCraftSpellZone[i], "playerCard", scene.playerCraftZone.name));
-
-                }
+                scene.GameHandler.playerCraftSpellZone = this.addAllCardsInZone(cardsInCraftSpellZone, scene.GameHandler.playerCraftSpellZone, scene.playerCraftZone, "playerCard");
 
 
                 let craftTextBeforeDrop = scene.GameHandler.isCraftText;
@@ -162,16 +141,12 @@ export default class SocketHandler {
                     scene.socket.emit('craftTextValidator', scene.socket.id, scene.GameHandler.isCraftText, scene.GameHandler.craftSpellName);
                 }
 
-            } else {
+            }  else {
 
-                scene.GameHandler.opponentCraftSpellZone.forEach(d => d.destroy());
-                scene.GameHandler.opponentCraftSpellZone = [];
+                scene.GameHandler.opponentCraftSpellZone = this.removeAllCardsInZone(scene.GameHandler.opponentCraftSpellZone);
 
-                for (let i in cardsInCraftSpellZone) {
+                scene.GameHandler.opponentCraftSpellZone = this.addAllCardsInZone(cardsInCraftSpellZone, scene.GameHandler.opponentCraftSpellZone, scene.opponentCraftZone, "opponentCard");
 
-                    scene.GameHandler.opponentCraftSpellZone.push(scene.DeckHandler.dealCard((scene.opponentCraftZone.x - 350) + (i * 50), scene.opponentCraftZone.y, cardsInCraftSpellZone[i], "opponentCard", scene.opponentCraftZone.name));
-
-                }
             }
 
 
@@ -181,21 +156,16 @@ export default class SocketHandler {
 
             if (socketId === scene.socket.id) {
 
-                scene.GameHandler.playerPlayZone.forEach(d => d.destroy());
-                scene.GameHandler.playerPlayZone = [];
+                scene.GameHandler.playerPlayZone = this.removeAllCardsInZone(scene.GameHandler.playerPlayZone);
 
-                for (let i in cardsInPlayZone) {
-                    scene.GameHandler.playerPlayZone.push(scene.DeckHandler.dealCard((scene.playerPlayZone.x - 350) + (i * 50), scene.playerPlayZone.y, cardsInPlayZone[i], "playerCard", scene.playerPlayZone.name));
-                }
+                scene.GameHandler.playerPlayZone = this.addAllCardsInZone(cardsInPlayZone, scene.GameHandler.playerPlayZone, scene.playerPlayZone, "playerCard");
 
             } else {
 
-                scene.GameHandler.opponentPlayZone.forEach(d => d.destroy());
-                scene.GameHandler.opponentPlayZone = [];
+                scene.GameHandler.opponentPlayZone = this.removeAllCardsInZone(scene.GameHandler.opponentPlayZone);
 
-                for (let i in cardsInPlayZone) {
-                    scene.GameHandler.opponentPlayZone.push(scene.DeckHandler.dealCard((scene.opponentPlayZone.x - 350) + (i * 50), scene.opponentPlayZone.y, cardsInPlayZone[i], "opponentCard", scene.opponentPlayZone.name));
-                }
+                scene.GameHandler.opponentPlayZone = this.addAllCardsInZone(cardsInPlayZone, scene.GameHandler.opponentPlayZone, scene.opponentPlayZone, "opponentCard");
+
             }
 
         })
@@ -250,23 +220,48 @@ export default class SocketHandler {
 
             if (socketId === scene.socket.id) {
 
-                scene.GameHandler.playerCraftSpellZone.forEach(d => d.destroy());
-                scene.GameHandler.playerCraftSpellZone = [];
+                scene.GameHandler.playerCraftSpellZone = this.removeAllCardsInZone(scene.GameHandler.playerCraftSpellZone);
 
                 scene.GameHandler.changePlayerCraftSpellZone();
                 scene.socket.emit('craftTextValidator', scene.socket.id, scene.GameHandler.isCraftText, scene.GameHandler.craftSpellName);
 
 
             } else {
-
-                scene.GameHandler.opponentCraftSpellZone.forEach(d => d.destroy());
-                scene.GameHandler.opponentCraftSpellZone = [];
+                
+                scene.GameHandler.opponentCraftSpellZone = this.removeAllCardsInZone(scene.GameHandler.opponentCraftSpellZone);
 
             }
 
 
         })
 
+
+        this.removeAllCardsInZone = (tempZone) => {
+
+            tempZone.forEach(d => d.destroy());
+            tempZone = [];
+
+            return tempZone;
+
+        };
+
+        this.addAllCardsInZone = (tempCardsInZone, tempZone, tempUIZone, type) => {
+
+            if (tempUIZone.name === "opponentHandArea") {
+                Object.keys(tempCardsInZone).forEach(
+                    tempCardKey =>
+                        tempZone.push(scene.DeckHandler.dealCard((tempUIZone.x - 350) + (Object.keys(tempCardsInZone).indexOf(tempCardKey) * 50), tempUIZone.y, "cardBack", type, tempUIZone.name))
+                );
+            } else {
+                Object.keys(tempCardsInZone).forEach(
+                    tempCardKey =>
+                        tempZone.push(scene.DeckHandler.dealCard((tempUIZone.x - 350) + (Object.keys(tempCardsInZone).indexOf(tempCardKey) * 50), tempUIZone.y, tempCardsInZone[tempCardKey].name, type, tempUIZone.name))
+                );
+            }
+
+            return tempZone;
+
+        }
 
     }
 }
