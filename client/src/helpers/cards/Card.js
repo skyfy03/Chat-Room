@@ -7,12 +7,20 @@ export default class Card {
             } else {
                 sprite = this.opponentCardSprite;
             }
+
+            let cardData = {};
+
+            cardData[this.name] = {
+                name: this.name,
+                type: type,
+                sprite: sprite,
+                dropZoneName: dropZoneName
+            }
+
             let card = scene.add.image(x, y, sprite).setInteractive().setData({
-                "name": this.name,
-                "type": type,
-                "sprite": sprite,
-                "dropZoneName": dropZoneName
+                "cardData": cardData
             });
+
             if (type === 'playerCard') {
                 scene.input.setDraggable(card);
             }

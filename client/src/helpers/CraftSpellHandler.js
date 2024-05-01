@@ -12,7 +12,7 @@ export default class CraftSpellHandler {
             }
 
             this.cardValidObject.cardValid = false;
-            this.cardValidObject.validCardName = "";
+            this.cardValidObject.cardCrafted = {};
             this.cardValidObject.cardsNotUsed = {};
             this.cardValidObject = this.throwRock(this.cardValidObject, cards);
 
@@ -28,35 +28,39 @@ export default class CraftSpellHandler {
             let attackActionCardMaxReq = 1;
 
             for (let i = 0; i < cards.length; i++) {
-                let tempCard = cards[i];
-
-                if (tempCard.data.values.sprite === "earthElement") {
+                let tempCard  = cards[i];
+                let tempCardData = tempCard.data.values.cardData[Object.keys(tempCard.data.values.cardData)[0]];
+                if (tempCardData.sprite === "earthElement") {
                     earthElementMinReq = earthElementMinReq - 1;
 
-                } else if (tempCard.data.values.sprite === "attackActionCard" && attackActionCardMaxReq == 1) {
+                } else if (tempCardData.sprite === "attackActionCard" && attackActionCardMaxReq == 1) {
                     attackActionCardMaxReq = attackActionCardMaxReq - 1;
                 } else {
-                    cardValidObj.cardsNotUsed[tempCard.data.values.name] = {
-                        name: tempCard.data.values.name,
-                        sprite: tempCard.data.values.sprite,
-                        cardDamage: 0
-                    };
+                    cardValidObj.cardsNotUsed[tempCardData.name] = tempCardData;
                 }
             }
 
+            let cardDamage = 0;
+
             if (earthElementMinReq <= 0 && attackActionCardMaxReq <= 0) {
                 cardValidObj.cardValid = true;
-                cardValidObj.cardDamage = 1;
+                cardDamage = 1;
             } else {
                 cardValidObj.cardValid = false;
             }
 
             if (earthElementMinReq < 0) {
-                cardValidObj.cardDamage * ((-1 * earthElementMinReq) + 1)
+                cardDamage = cardDamage * ((-1 * earthElementMinReq) + 1)
             }
 
             if (cardValidObj.cardValid) {
-                cardValidObj.validCardName = "throwRock";
+                cardValidObj.cardCrafted["throwRock"] = {
+                    name: "throwRock",
+                    sprite: "throwRock",
+                    cardDamage: cardDamage
+                }
+            } else {
+                cardValidObj.cardCrafted = {};
             }
 
             return cardValidObj;

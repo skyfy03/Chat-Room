@@ -185,7 +185,7 @@ export default class SocketHandler {
             }
         })
 
-        scene.socket.on('craftTextValidator', (socketId, isCraftText, craftSpellName) => {
+        scene.socket.on('craftTextValidator', (socketId, isCraftText) => {
 
             if (socketId === scene.socket.id) {
 
@@ -194,12 +194,19 @@ export default class SocketHandler {
                     scene.craftText.setInteractive();
                     scene.craftText.setColor('#36f802');
 
-                    scene.playerCraftSpellCardPreview = scene.add.image(1100, 825, scene.GameHandler.craftSpellName);
+                    let tempCraftableCard = scene.GameHandler.craftedSpell[Object.keys(scene.GameHandler.craftedSpell)[0]];
+
+                    scene.playerCraftSpellCardPreview = scene.DeckHandler.dealCard(1100, 825, tempCraftableCard.name, "playerCard", "", tempCraftableCard.cardDamage);
 
                 } else {
 
                     scene.craftText.disableInteractive();
                     scene.craftText.setColor('#d70808');
+
+                    if (scene.playerCraftSpellCardPreview.attackDamageText != null) {
+                        scene.playerCraftSpellCardPreview.attackDamageText.destroy();
+                    }
+
                     scene.playerCraftSpellCardPreview.destroy();
 
                 }
@@ -207,6 +214,7 @@ export default class SocketHandler {
             } else if (socketId !== scene.socket.id) {
 
                 if (isCraftText) {
+
                     scene.opponentCraftSpellCardPreview = scene.add.image(1100, 255, "cardBack");
                 } else {
                     scene.opponentCraftSpellCardPreview.destroy();
@@ -255,7 +263,7 @@ export default class SocketHandler {
             } else {
                 Object.keys(tempCardsInZone).forEach(
                     tempCardKey =>
-                        tempZone.push(scene.DeckHandler.dealCard((tempUIZone.x - 350) + (Object.keys(tempCardsInZone).indexOf(tempCardKey) * 50), tempUIZone.y, tempCardsInZone[tempCardKey].name, type, tempUIZone.name))
+                        tempZone.push(scene.DeckHandler.dealCard((tempUIZone.x - 350) + (Object.keys(tempCardsInZone).indexOf(tempCardKey) * 50), tempUIZone.y, tempCardsInZone[tempCardKey].name, type, tempUIZone.name, tempCardsInZone[tempCardKey].cardDamage))
                 );
             }
 
