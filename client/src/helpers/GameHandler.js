@@ -24,7 +24,7 @@ export default class GameHandler {
         this.opponentTextHP;
 
         this.isCraftText = false;
-        this.craftSpellName = "";
+        this.craftedSpell = {};
 
 
         this.changeTurn = () => {
@@ -52,7 +52,7 @@ export default class GameHandler {
 
             if (scene.CraftSpellHandler.cardValidObject.cardValid) {
                 this.isCraftText = true;
-                this.craftSpellName = scene.CraftSpellHandler.cardValidObject.validCardName;
+                this.craftedSpell = scene.CraftSpellHandler.cardValidObject.cardCrafted;
             }
 
         }

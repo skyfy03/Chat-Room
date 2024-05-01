@@ -1,6 +1,7 @@
 import Card from "./Card.js";
+import CardAttack from "./CardAttack.js";
 
-export default class ThrowRock extends Card {
+export default class ThrowRock extends CardAttack {
 
     constructor(scene) {
 
@@ -10,7 +11,7 @@ export default class ThrowRock extends Card {
         this.playerCardSprite = "throwRock";
         this.opponentCardSprite = "throwRock";
 
-        this.damage = 0;
+
 
     }
 

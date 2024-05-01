@@ -58,8 +58,7 @@ io.on('connection', function (socket) {
             let cardSprite = deckArr[i];
             players[socketId].inDeck[cardSprite] = {
                 name: cardSprite,
-                sprite: cardSprite,
-                cardDamage: 0
+                sprite: cardSprite
             };
         }
 
@@ -87,8 +86,7 @@ io.on('connection', function (socket) {
                 players[socketId].inHand[players[socketId].inDeck[d].name] =
                 {
                     name: players[socketId].inDeck[d].name,
-                    sprite: players[socketId].inDeck[d].sprite,
-                    cardDamage: players[socketId].inDeck[d].cardDamage
+                    sprite: players[socketId].inDeck[d].sprite
                 }
         );
 
@@ -135,39 +133,28 @@ io.on('connection', function (socket) {
 
     })
 
-    socket.on('cardPlayedPlayerArea', function (socketId, cardName) {
+    socket.on('cardPlayedPlayerArea', function (socketId, cardDataObject) {
 
-        players[socketId].inHand[cardName] = {
-            name: cardName,
-            sprite: cardName,
-            cardDamage: 0
-        };
+        players[socketId].inHand[cardDataObject.name] = cardDataObject;
 
         console.log(players);
 
         io.emit('cardPlayedPlayerArea', socketId, players[socketId].inHand);
     });
 
-    socket.on('cardPlayedCraftZone', function (socketId, cardName) {
+    socket.on('cardPlayedCraftZone', function (socketId, cardDataObject) {
 
-        players[socketId].inCraftSpellZone[cardName] = {
-            name: cardName,
-            sprite: cardName,
-            cardDamage: 0
-        };
+        players[socketId].inCraftSpellZone[cardDataObject.name] = cardDataObject;
 
-        console.log(players);
+        console.log(players[socketId].inCraftSpellZone);
+        //console.log(players);
 
         io.emit('cardPlayedCraftZone', socketId, players[socketId].inCraftSpellZone);
     });
 
-    socket.on('cardPlayedPlayZone', function (socketId, cardName) {
+    socket.on('cardPlayedPlayZone', function (socketId, cardDataObject) {
 
-        players[socketId].inPlayZone[cardName] = {
-            name: cardName,
-            sprite: cardName,
-            cardDamage: 0
-        };
+        players[socketId].inPlayZone[cardDataObject.name] = cardDataObject;
 
         console.log(players);
 
@@ -205,27 +192,19 @@ io.on('connection', function (socket) {
         io.emit('removeAllCraftSpell', socketId);
     });
 
-    socket.on('craftSpell', function (socketId, cardCraftSpellName, cardsNotUsed) {
+    socket.on('craftSpell', function (socketId, cardCrafted, cardsNotUsed) {
 
-        players[socketId].inHand[cardCraftSpellName] = {
-            name: cardCraftSpellName,
-            sprite: cardCraftSpellName,
-            cardDamage: 0
-        };
+        players[socketId].inHand[cardCrafted.name] = cardCrafted;
 
-        console.log(cardsNotUsed);
-
+        //Add cards not used back into craftSpellZone
         Object.keys(cardsNotUsed).forEach(
             tempCardKey =>
-                players[socketId].inCraftSpellZone[cardsNotUsed[tempCardKey].name] =
-                {
-                    name: cardsNotUsed[tempCardKey].name,
-                    sprite: cardsNotUsed[tempCardKey].sprite,
-                    cardDamage: cardsNotUsed[tempCardKey].cardDamage
-                }
+                players[socketId].inCraftSpellZone[cardsNotUsed[tempCardKey].name] = cardsNotUsed[tempCardKey]
         );
 
         console.log(players);
+
+        console.log(players[socketId].inHand);
 
         io.emit('cardPlayedCraftZone', socketId, players[socketId].inCraftSpellZone);
         io.emit('cardPlayedPlayerArea', socketId, players[socketId].inHand);

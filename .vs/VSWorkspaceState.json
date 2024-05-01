@@ -6,6 +6,6 @@
     "\\client\\src\\helpers",
     "\\client\\src\\helpers\\cards"
   ],
-  "SelectedNode": "\\client\\src\\helpers\\DeckHandler.js",
+  "SelectedNode": "\\client\\src\\helpers\\cards\\Card.js",
   "PreviewInSolutionExplorer": false
 }
