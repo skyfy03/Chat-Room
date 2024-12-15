@@ -34,23 +34,23 @@ export class Preloader extends Scene
 
         this.load.image('logo', 'logo.png');
 
-        //CardBack
-        this.load.image('cardBack', 'cardBack.png');
+        ////CardBack
+        //this.load.image('cardBack', 'cardBack.png');
 
-        //Action Cards
-        this.load.image('attackActionCard', 'attackActionCard.png');
+        ////Action Cards
+        //this.load.image('attackActionCard', 'attackActionCard.png');
 
-        //First 4 Elements
-        this.load.image('earthElement', 'earthCard.png');
-        this.load.image('fireElement', 'fireCard.png');
-        this.load.image('waterElement', 'waterCard.png');
-        this.load.image('windElement', 'windCard.png');
+        ////First 4 Elements
+        //this.load.image('earthElement', 'earthCard.png');
+        //this.load.image('fireElement', 'fireCard.png');
+        //this.load.image('waterElement', 'waterCard.png');
+        //this.load.image('windElement', 'windCard.png');
 
-        //First 4 Attack Spell
-        this.load.image('fireBlast', 'fireBlastSpell.png');
-        this.load.image('powerfulGust', 'powerfulGustSpell.png');
-        this.load.image('throwRock', 'throwRockSpell.png');
-        this.load.image('violentWave', 'violentWaveSpell.png');
+        ////First 4 Attack Spell
+        //this.load.image('fireBlast', 'fireBlastSpell.png');
+        //this.load.image('powerfulGust', 'powerfulGustSpell.png');
+        //this.load.image('throwRock', 'throwRockSpell.png');
+        //this.load.image('violentWave', 'violentWaveSpell.png');
 
     }
 

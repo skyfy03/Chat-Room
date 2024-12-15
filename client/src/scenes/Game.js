@@ -1,11 +1,9 @@
 import { Scene } from 'phaser';
-//import CardHandler from '../helpers/CardHandler';
-import DeckHandler from '../helpers/DeckHandler';
+import SendHandler from '../helpers/messaging/SendHandler';
 import GameHandler from '../helpers/GameHandler';
 import InteractiveHandler from '../helpers/InteractiveHandler';
 import SocketHandler from '../helpers/SocketHandler';
 import UIHandler from '../helpers/UIHandler';
-import CraftSpellHandler from '../helpers/CraftSpellHandler';
 
 export class Game extends Scene
 {
@@ -16,15 +14,15 @@ export class Game extends Scene
 
     create ()
     {
+        this.playerEnterTextElement = document.getElementById('myText');
+        this.textAreaElement = document.getElementById('textArea');
 
-        //this.CardHandler = new CardHandler();
-        this.DeckHandler = new DeckHandler(this);
+
+        this.SendHandler = new SendHandler();
         this.GameHandler = new GameHandler(this);
         this.SocketHandler = new SocketHandler(this);
         this.UIHandler = new UIHandler(this);
         this.UIHandler.buildUI();
         this.InteractiveHandler = new InteractiveHandler(this);
-
-        this.CraftSpellHandler = new CraftSpellHandler(this);
     }
 }

@@ -13,7 +13,7 @@ export class MainMenu extends Scene
 
         this.add.image(1920 / 2, 1080 / 2, 'logo');
 
-        this.add.text(1920 / 2, (1080 / 2) + 150, 'Main Menu', {
+        this.add.text(1920 / 2, (1080 / 2) + 150, 'Join the Chat', {
             fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
             stroke: '#000000', strokeThickness: 8,
             align: 'center'

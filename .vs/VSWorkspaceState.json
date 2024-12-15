@@ -1,11 +1,7 @@
 {
   "ExpandedNodes": [
     "",
-    "\\client",
-    "\\client\\src",
-    "\\client\\src\\helpers",
-    "\\client\\src\\helpers\\cards"
+    "\\client"
   ],
-  "SelectedNode": "\\client\\src\\helpers\\cards\\Card.js",
   "PreviewInSolutionExplorer": false
 }
